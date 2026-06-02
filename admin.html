@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>管理后台 · SITRAIN Hub</title>
+<meta name="description" content="SITRAIN Hub 培训平台管理后台（演示）—— 课程 / 学员 / 学习路径 / 数据总览。" />
+<script>try{var t=localStorage.getItem('si-theme')||((window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23009999'/%3E%3Ctext x='16' y='22' font-family='Archivo,sans-serif' font-size='18' font-weight='800' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
+<style>
+  body { overflow-x: hidden; }
+  .admin { display: grid; grid-template-columns: 256px 1fr; min-height: 100vh; }
+
+  /* sidebar */
+  .side { background: var(--surface); border-right: 1px solid var(--line); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 18px 14px; z-index: 50; }
+  .side__brand { display: flex; align-items: baseline; gap: 9px; padding: 6px 10px 18px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+  .side__brand .m { font-weight: 800; font-size: 19px; letter-spacing: .04em; color: var(--petrol); }
+  .side__brand .s { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--text-weak); padding-left: 9px; border-left: 1px solid var(--line-strong); }
+  .side__nav { display: grid; gap: 3px; }
+  .navi { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: var(--r); color: var(--text-soft); font-size: 14.5px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: background .15s, color .15s; text-align: left; width: 100%; }
+  .navi svg { width: 19px; height: 19px; flex: none; }
+  .navi:hover { background: var(--bg-alt); color: var(--text); }
+  .navi.is-active { background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 26%, transparent); }
+  .side__foot { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+  .side__foot .navi { color: var(--text-weak); }
+
+  /* main */
+  .main { min-width: 0; display: flex; flex-direction: column; }
+  .topbar { position: sticky; top: 0; z-index: 40; height: 64px; display: flex; align-items: center; gap: 16px; padding: 0 clamp(18px,3vw,32px); background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .topbar h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .topbar__sp { margin-left: auto; }
+  .search { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 8px 12px; color: var(--text-soft); width: 240px; max-width: 36vw; }
+  .search svg { width: 16px; height: 16px; flex: none; }
+  .search input { border: 0; background: none; outline: none; color: var(--text); font: inherit; font-size: 14px; width: 100%; }
+  .who { display: flex; align-items: center; gap: 10px; }
+  .who .avatar { width: 36px; height: 36px; font-size: 13px; }
+  .who .nm { font-size: 13.5px; font-weight: 600; } .who .rl { font-size: 11px; color: var(--text-weak); font-family: var(--font-mono); }
+  .iconbtn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: var(--r); color: var(--text-soft); }
+  .iconbtn:hover { color: var(--primary); border-color: var(--primary); } .iconbtn svg { width: 18px; height: 18px; }
+  .menu-toggle { display: none; }
+
+  .content { padding: clamp(20px,3vw,32px); }
+  .view { display: none; } .view.is-active { display: block; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+
+  .vhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .vhead .kicker { margin-bottom: 8px; }
+  .vhead h2 { font-size: clamp(22px,2.6vw,30px); font-weight: 800; letter-spacing: -0.02em; }
+  .vhead p { color: var(--text-soft); font-size: 14px; margin-top: 4px; }
+
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px; position: relative; overflow: hidden; }
+  .kpi-card .ic { width: 34px; height: 34px; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); margin-bottom: 12px; }
+  .kpi-card .ic svg { width: 18px; height: 18px; }
+  .kpi-card .v { font-family: var(--font-mono); font-size: 27px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .kpi-card .l { color: var(--text-soft); font-size: 13px; margin-top: 7px; }
+  .kpi-card .d { font-family: var(--font-mono); font-size: 11.5px; margin-top: 8px; color: var(--success); }
+  .kpi-card .d.dn { color: var(--text-weak); }
+
+  /* panels grid */
+  .panels { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; }
+  .panel h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .panel h3 .tag { margin-left: auto; }
+  .panel .sub { color: var(--text-weak); font-size: 12px; font-family: var(--font-mono); margin-bottom: 18px; }
+
+  /* bar chart */
+  .bars { display: flex; align-items: flex-end; gap: 14px; height: 180px; padding-top: 10px; }
+  .bars .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+  .bars .bar { width: 100%; max-width: 42px; background: linear-gradient(var(--primary), color-mix(in srgb, var(--primary) 55%, var(--accent-bright))); border-radius: var(--r) var(--r) 0 0; position: relative; transition: height .6s cubic-bezier(.2,.7,.2,1); }
+  .bars .bar::after { content: attr(data-v); position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-soft); }
+  .bars .lab { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); }
+
+  /* distribution bars */
+  .dist { display: grid; gap: 13px; }
+  .dist .row { display: grid; gap: 6px; }
+  .dist .top { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-soft); }
+  .dist .top b { font-family: var(--font-mono); color: var(--text); }
+  .dist .track { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+  .dist .fill { height: 100%; background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); border-radius: 4px; transition: width .7s ease; }
+
+  /* table */
+  .tablewrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tbl th { text-align: left; font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-weak); padding: 14px 16px; border-bottom: 1px solid var(--line); background: var(--bg-alt); white-space: nowrap; }
+  .tbl td { padding: 13px 16px; border-bottom: 1px solid var(--line); color: var(--text-soft); vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl tbody tr:hover { background: var(--bg-alt); }
+  .tbl .nm { color: var(--text); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); color: var(--text-soft); cursor: pointer; }
+  .pill.pub { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); border-color: transparent; }
+  .pill.draft { background: color-mix(in srgb, var(--warning) 16%, transparent); color: var(--warning); border-color: transparent; }
+  .miniprog { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+  .miniprog .t { flex: 1; height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .miniprog .f { height: 100%; background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); }
+  .miniprog span { font-family: var(--font-mono); font-size: 12px; color: var(--text-soft); width: 34px; }
+  .rowact { display: flex; gap: 6px; }
+  .rowact button { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: var(--r); color: var(--text-weak); }
+  .rowact button:hover { color: var(--primary); border-color: var(--primary); }
+  .rowact button.del:hover { color: var(--error); border-color: var(--error); }
+  .rowact svg { width: 15px; height: 15px; }
+  .avatar.sm { width: 32px; height: 32px; font-size: 11px; }
+  .tbl .cell { display: flex; align-items: center; gap: 11px; }
+
+  /* settings */
+  .form { display: grid; gap: 18px; max-width: 560px; }
+  .field { display: grid; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 600; }
+  .field .hint { font-size: 12px; color: var(--text-weak); }
+  .inp, select.inp { background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r); padding: 11px 13px; color: var(--text); font: inherit; font-size: 14px; width: 100%; }
+  .inp:focus, select.inp:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+  .seg button { padding: 9px 16px; border: 1px solid var(--line-strong); border-radius: var(--r); color: var(--text-soft); font-size: 14px; }
+  .seg button.on { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+
+  /* modal */
+  .modal { position: fixed; inset: 0; z-index: 200; display: none; place-items: center; background: rgba(6,14,20,.55); backdrop-filter: blur(3px); padding: 20px; }
+  .modal.open { display: grid; }
+  .modal__box { background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: var(--sh-3); width: 100%; max-width: 520px; padding: 26px; animation: fade .25s ease; }
+  .modal__hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .modal__hd h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+  .modal__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .modal__grid .full { grid-column: 1 / -1; }
+  .modal__foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--bg); padding: 12px 20px; border-radius: var(--r); font-size: 14px; font-weight: 500; box-shadow: var(--sh-3); opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 300; }
+  .toast.show { opacity: 1; transform: translateX(-50%); }
+
+  @media (max-width: 920px) {
+    .admin { grid-template-columns: 1fr; }
+    .side { position: fixed; top: 0; left: 0; width: 264px; transform: translateX(-100%); transition: transform .3s ease; box-shadow: var(--sh-3); }
+    .side.open { transform: none; }
+    .menu-toggle { display: grid; }
+    .kpis { grid-template-columns: 1fr 1fr; } .panels { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) { .kpis { grid-template-columns: 1fr; } .search { display: none; } .modal__grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ===== SVG sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0111 0M16 6.2a3 3 0 010 5.6M21 19a5 5 0 00-3.5-4.8"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v4M12 11.2L6.2 17M12 11.2L17.8 17"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-2.7 1.1V19a2 2 0 11-4 0a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00-1.1-2.7H3a2 2 0 110-4a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 114 0a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M6 7l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2 2 0 00-2.8-2.8L5 17.2V20z"/><path d="M14 6.5l3.5 3.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M19 13v6a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h6"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-8M21 7h-4M21 7v4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<div class="admin">
+  <!-- sidebar -->
+  <aside class="side" id="side">
+    <div class="side__brand"><span class="m">SIEMENS</span><span class="s">Admin</span></div>
+    <nav class="side__nav" id="sidenav">
+      <button class="navi is-active" data-view="dashboard"><svg><use href="#i-grid"/></svg>总览</button>
+      <button class="navi" data-view="courses"><svg><use href="#i-chip"/></svg>课程管理</button>
+      <button class="navi" data-view="learners"><svg><use href="#i-users"/></svg>学员管理</button>
+      <button class="navi" data-view="paths"><svg><use href="#i-network"/></svg>学习路径</button>
+      <button class="navi" data-view="resources"><svg><use href="#i-doc"/></svg>资料库</button>
+      <button class="navi" data-view="settings"><svg><use href="#i-gear"/></svg>设置</button>
+    </nav>
+    <div class="side__foot">
+      <a class="navi" href="index.html"><svg><use href="#i-external"/></svg>返回前台站点</a>
+    </div>
+  </aside>
+
+  <!-- main -->
+  <div class="main">
+    <div class="topbar">
+      <button class="iconbtn menu-toggle" id="menuToggle" aria-label="菜单"><svg><use href="#i-menu"/></svg></button>
+      <h1 id="pageTitle">总览</h1>
+      <div class="topbar__sp"></div>
+      <label class="search"><svg><use href="#i-search"/></svg><input id="globalSearch" placeholder="搜索课程 / 学员…" /></label>
+      <button class="theme-toggle iconbtn" id="themeToggle" aria-label="切换主题"><svg class="i-moon"><use href="#i-moon"/></svg><svg class="i-sun"><use href="#i-sun"/></svg></button>
+      <div class="who"><div class="avatar sm">SA</div><div><div class="nm">管理员</div><div class="rl">SITRAIN ADMIN</div></div></div>
+    </div>
+
+    <div class="content">
+      <!-- ===== Dashboard ===== -->
+      <section class="view is-active" data-view="dashboard">
+        <div class="vhead"><div><div class="kicker">数据总览 / OVERVIEW</div><h2>平台运营概览</h2></div></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="panels">
+          <div class="panel">
+            <h3><svg style="width:17px;height:17px;color:var(--primary)"><use href="#i-trend"/></svg> 近 6 个月报名趋势 <span class="tag">+16.3%</span></h3>
+            <div class="sub">MONTHLY ENROLLMENTS</div>
+            <div class="bars" id="trend"></div>
+          </div>
+          <div class="panel">
+            <h3>各学习路径课程分布</h3>
+            <div class="sub">COURSES BY TRACK</div>
+            <div class="dist" id="dist"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>最近动态</h3>
+          <div class="sub">RECENT ACTIVITY</div>
+          <div class="tablewrap" style="border:0">
+            <table class="tbl"><tbody id="activity"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Courses ===== -->
+      <section class="view" data-view="courses">
+        <div class="vhead">
+          <div><div class="kicker">课程管理 / COURSES</div><h2>课程管理</h2><p id="courseCount"></p></div>
+          <button class="btn" id="addCourseBtn"><svg><use href="#i-plus"/></svg>新增课程</button>
+        </div>
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr><th>编号</th><th>课程名称</th><th>学习路径</th><th>等级</th><th>学时</th><th>形式</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody id="courseRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Learners ===== -->
+      <section class="view" data-view="learners">
+        <div class="vhead"><div><div class="kicker">学员管理 / LEARNERS</div><h2>学员管理</h2><p id="learnerCount"></p></div></div>
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr><th>学员</th><th>岗位 / 企业</th><th>主修路径</th><th>学习进度</th><th>已完课</th><th>状态</th></tr></thead>
+            <tbody id="learnerRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Paths ===== -->
+      <section class="view" data-view="paths">
+        <div class="vhead"><div><div class="kicker">学习路径 / PATHS</div><h2>学习路径</h2></div></div>
+        <div class="grid cols-3" id="pathCards" style="gap:16px"></div>
+      </section>
+
+      <!-- ===== Resources ===== -->
+      <section class="view" data-view="resources">
+        <div class="vhead"><div><div class="kicker">资料库 / RESOURCES</div><h2>资料与工具</h2></div></div>
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr><th>资料</th><th>类型</th><th>说明</th><th>下载量</th></tr></thead>
+            <tbody id="resRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== Settings ===== -->
+      <section class="view" data-view="settings">
+        <div class="vhead"><div><div class="kicker">设置 / SETTINGS</div><h2>站点设置</h2></div></div>
+        <div class="panel">
+          <div class="form">
+            <div class="field"><label>站点名称</label><input class="inp" value="SITRAIN Hub · 西门子工业培训学院" /></div>
+            <div class="field"><label>站点标语</label><input class="inp" value="从 PLC 到云端，系统精通数字化工业" /></div>
+            <div class="field"><label>默认主题</label><div class="seg" id="themeSeg"><button data-t="light">浅色</button><button data-t="dark">深色「驾驶舱」</button></div><span class="hint">访客首次进入时的默认外观（演示：作用于本机预览）。</span></div>
+            <div class="field"><label>每页课程数</label><select class="inp"><option>9</option><option selected>12</option><option>18</option><option>24</option></select></div>
+            <div class="field"><label>报名是否需审核</label><div class="seg"><button class="on">开启</button><button>关闭</button></div></div>
+            <div><button class="btn" id="saveSettings">保存设置</button></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- add course modal -->
+<div class="modal" id="modal">
+  <div class="modal__box">
+    <div class="modal__hd"><h3>新增课程</h3><button class="iconbtn" id="modalClose" aria-label="关闭"><svg><use href="#i-close"/></svg></button></div>
+    <div class="modal__grid">
+      <div class="field"><label>课程编号</label><input class="inp" id="f-id" placeholder="如 TIA-301" /></div>
+      <div class="field"><label>学时</label><input class="inp" id="f-hours" type="number" value="24" min="1" /></div>
+      <div class="field full"><label>课程名称</label><input class="inp" id="f-title" placeholder="如 TIA 博途高级诊断" /></div>
+      <div class="field"><label>学习路径</label><select class="inp" id="f-track"></select></div>
+      <div class="field"><label>等级</label><select class="inp" id="f-level"><option value="Beginner">入门</option><option value="Intermediate" selected>进阶</option><option value="Advanced">高级</option></select></div>
+      <div class="field full"><label>形式</label><select class="inp" id="f-format"><option>视频课程</option><option>实操实验</option><option>在线直播</option><option>图文文档</option></select></div>
+      <div class="field full"><label>简介</label><input class="inp" id="f-desc" placeholder="一句话课程简介…" /></div>
+    </div>
+    <div class="modal__foot"><button class="btn btn--ghost" id="modalCancel">取消</button><button class="btn" id="modalSave">创建课程</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var D = window.SITE_DATA || {};
+  var S = window.SITRAIN || {};
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var icon = S.icon || function (k) { return '<svg><use href="#i-' + k + '"></use></svg>'; };
+  var LV = S.LV_ZH || { Beginner: "入门", Intermediate: "进阶", Advanced: "高级" };
+  var tracks = D.tracks || [];
+  function trackName(id) { var t = tracks.filter(function (x) { return x.id === id; })[0]; return t ? t.name_zh : id; }
+
+  /* ---- course state (localStorage) ---- */
+  var LSK = "si-admin-courses-v1";
+  function seed() { return (D.courses || []).map(function (c, i) { var o = {}; for (var k in c) o[k] = c[k]; o.status = (i % 6 === 4) ? "draft" : "pub"; o.enroll = 120 + ((i * 137) % 900); return o; }); }
+  function load() { try { var s = localStorage.getItem(LSK); if (s) return JSON.parse(s); } catch (e) {} return seed(); }
+  function save() { try { localStorage.setItem(LSK, JSON.stringify(courses)); } catch (e) {} }
+  var courses = load();
+
+  /* ---- demo learners (deterministic) ---- */
+  var lnames = ["李伟", "王芳", "张敏", "刘洋", "陈杰", "杨磊", "赵静", "黄强", "周倩", "吴昊", "徐丹", "孙超"];
+  var roles = ["自动化工程师", "维护技师", "电气工程师", "调试工程师", "生产主管", "PLC 程序员", "项目经理", "设备主管"];
+  var comps = ["汽车一级供应商", "食品饮料厂", "离散制造", "流程工业", "新能源电池厂", "机械装备商"];
+  var lstat = [["学习中", "pub"], ["已认证", "pub"], ["学习中", "pub"], ["已完课", "pub"], ["待激活", "draft"], ["已认证", "pub"]];
+  var learners = lnames.map(function (n, i) {
+    var st = lstat[i % lstat.length];
+    return { name: n, ini: n.slice(0, 1) + (n.slice(1, 2) || ""), role: roles[i % roles.length], comp: comps[i % comps.length],
+      track: trackName((tracks[i % tracks.length] || {}).id), prog: 22 + (i * 17) % 76, done: (i * 3) % 11, status: st[0], cls: st[1] };
+  });
+
+  /* ---- KPIs ---- */
+  function renderKpis() {
+    var hrs = courses.reduce(function (a, c) { return a + (c.hours || 0); }, 0);
+    var data = [
+      { ic: "chip", v: courses.length, l: "课程总数", d: "+3 本月" },
+      { ic: "users", v: "62,480", l: "累计学员", d: "+1,430 本月" },
+      { ic: "trend", v: "1,430", l: "本月报名", d: "+16.3%" },
+      { ic: "badge", v: "78%", l: "平均完课率", d: "+4.2%" },
+      { ic: "doc", v: hrs.toLocaleString(), l: "课程总学时", d: "" }
+    ];
+    $("#kpis").innerHTML = data.map(function (k) {
+      return '<div class="kpi-card"><div class="ic">' + icon(k.ic) + '</div><div class="v">' + k.v + '</div><div class="l">' + k.l + '</div>' +
+        (k.d ? '<div class="d">▲ ' + k.d + '</div>' : '<div class="d dn">较上月持平</div>') + '</div>';
+    }).join("");
+  }
+
+  /* ---- trend chart ---- */
+  function renderTrend() {
+    var months = ["1月", "2月", "3月", "4月", "5月", "6月"];
+    var vals = [820, 960, 1100, 980, 1240, 1430];
+    var max = Math.max.apply(null, vals);
+    $("#trend").innerHTML = months.map(function (m, i) {
+      var h = Math.round(vals[i] / max * 100);
+      return '<div class="col"><div class="bar" data-v="' + vals[i] + '" style="height:' + h + '%"></div><div class="lab">' + m + '</div></div>';
+    }).join("");
+  }
+
+  /* ---- distribution ---- */
+  function renderDist() {
+    var rows = tracks.map(function (t) { return { name: t.name_zh, n: courses.filter(function (c) { return c.track === t.id; }).length }; });
+    var max = Math.max.apply(null, rows.map(function (r) { return r.n; })) || 1;
+    $("#dist").innerHTML = rows.map(function (r) {
+      return '<div class="row"><div class="top"><span>' + r.name + '</span><b>' + r.n + '</b></div>' +
+        '<div class="track"><div class="fill" style="width:' + Math.round(r.n / max * 100) + '%"></div></div></div>';
+    }).join("");
+  }
+
+  /* ---- activity ---- */
+  function renderActivity() {
+    var acts = [
+      [learners[1], "完成了课程", "SINAMICS G120 调试", "12 分钟前"],
+      [learners[4], "报名了课程", "TIA 博途 SIMATIC 编程（一）", "38 分钟前"],
+      [learners[0], "获得认证", "PROFINET 组态与诊断", "1 小时前"],
+      [learners[7], "开始学习", "工业边缘 (Industrial Edge) 入门", "2 小时前"],
+      [learners[3], "完成了实验", "SIMATIC Safety Integrated", "3 小时前"]
+    ];
+    $("#activity").innerHTML = acts.map(function (a) {
+      return '<tr><td><div class="cell"><div class="avatar sm">' + a[0].ini + '</div><span class="nm">' + a[0].name + '</span></div></td>' +
+        '<td>' + a[1] + '</td><td class="nm">' + a[2] + '</td><td style="text-align:right;font-family:var(--font-mono);font-size:12.5px;color:var(--text-weak)">' + a[3] + '</td></tr>';
+    }).join("");
+  }
+
+  /* ---- courses table ---- */
+  function renderCourses(filter) {
+    filter = (filter || "").toLowerCase();
+    var list = courses.filter(function (c) {
+      return !filter || (c.title_zh + " " + c.id + " " + (c.title_en || "")).toLowerCase().indexOf(filter) >= 0;
+    });
+    $("#courseCount").textContent = "共 " + courses.length + " 门课程" + (filter ? " · " + list.length + " 门匹配" : "");
+    $("#courseRows").innerHTML = list.map(function (c) {
+      return '<tr data-id="' + c.id + '">' +
+        '<td><span class="code">' + c.id + '</span></td>' +
+        '<td class="nm">' + c.title_zh + '</td>' +
+        '<td>' + trackName(c.track) + '</td>' +
+        '<td><span class="tag tag--lv lv-' + c.level + '">' + (LV[c.level] || c.level) + '</span></td>' +
+        '<td style="font-family:var(--font-mono)">' + c.hours + 'h</td>' +
+        '<td>' + c.format + '</td>' +
+        '<td><span class="pill ' + (c.status === "pub" ? "pub" : "draft") + '" data-act="toggle">' + (c.status === "pub" ? "已发布" : "草稿") + '</span></td>' +
+        '<td><div class="rowact"><button data-act="edit" title="编辑">' + icon("edit") + '</button><button class="del" data-act="del" title="删除">' + icon("trash") + '</button></div></td>' +
+        '</tr>';
+    }).join("") || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-weak)">没有匹配的课程</td></tr>';
+  }
+
+  /* ---- learners table ---- */
+  function renderLearners(filter) {
+    filter = (filter || "").toLowerCase();
+    var list = learners.filter(function (l) { return !filter || (l.name + l.role + l.comp).toLowerCase().indexOf(filter) >= 0; });
+    $("#learnerCount").textContent = "共 " + learners.length + " 名学员（演示样本）";
+    $("#learnerRows").innerHTML = list.map(function (l) {
+      return '<tr><td><div class="cell"><div class="avatar sm">' + l.ini + '</div><span class="nm">' + l.name + '</span></div></td>' +
+        '<td>' + l.role + ' · ' + l.comp + '</td><td>' + l.track + '</td>' +
+        '<td><div class="miniprog"><div class="t"><div class="f" style="width:' + l.prog + '%"></div></div><span>' + l.prog + '%</span></div></td>' +
+        '<td style="font-family:var(--font-mono)">' + l.done + '</td>' +
+        '<td><span class="pill ' + (l.cls === "pub" ? "pub" : "draft") + '">' + l.status + '</span></td></tr>';
+    }).join("");
+  }
+
+  /* ---- paths cards ---- */
+  function renderPaths() {
+    $("#pathCards").innerHTML = tracks.map(function (t) {
+      var n = courses.filter(function (c) { return c.track === t.id; }).length;
+      return '<article class="card path"><div class="path__top"><div class="icon-box">' + icon(t.icon) + '</div><span class="eng-num">' + t.index + '</span></div>' +
+        '<h3>' + t.name_zh + '</h3><div class="path__en">' + t.name_en + '</div>' +
+        '<div class="path__foot" style="margin-top:18px"><span class="eng-num">' + n + ' 门课程</span><span class="eng-num">' + (1200 + parseInt(t.index, 10) * 380) + ' 学员</span></div></article>';
+    }).join("");
+  }
+
+  /* ---- resources table ---- */
+  function renderRes() {
+    $("#resRows").innerHTML = (D.resources || []).map(function (r, i) {
+      return '<tr><td><div class="cell"><div class="icon-box" style="width:36px;height:36px">' + icon(r.icon) + '</div><span class="nm">' + r.title_zh + '</span></div></td>' +
+        '<td><span class="tag">' + r.type + '</span></td><td>' + r.desc_zh + '</td>' +
+        '<td style="font-family:var(--font-mono);color:var(--text-soft)">' + (320 + i * 197) + '</td></tr>';
+    }).join("");
+  }
+
+  /* ---- nav switching ---- */
+  var titles = { dashboard: "总览", courses: "课程管理", learners: "学员管理", paths: "学习路径", resources: "资料库", settings: "设置" };
+  function show(view) {
+    $$(".navi[data-view]").forEach(function (n) { n.classList.toggle("is-active", n.getAttribute("data-view") === view); });
+    $$(".view").forEach(function (v) { v.classList.toggle("is-active", v.getAttribute("data-view") === view); });
+    $("#pageTitle").textContent = titles[view] || "";
+    $("#side").classList.remove("open");
+  }
+  $("#sidenav").addEventListener("click", function (e) {
+    var b = e.target.closest(".navi[data-view]"); if (b) show(b.getAttribute("data-view"));
+  });
+
+  /* ---- course row actions ---- */
+  function toast(msg) { var t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove("show"); }, 2200); }
+  $("#courseRows").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-act]"); if (!btn) return;
+    var tr = e.target.closest("tr"); var id = tr.getAttribute("data-id");
+    var idx = courses.findIndex(function (c) { return c.id === id; }); if (idx < 0) return;
+    var act = btn.getAttribute("data-act");
+    if (act === "toggle") { courses[idx].status = courses[idx].status === "pub" ? "draft" : "pub"; save(); renderCourses($("#globalSearch").value); toast("已切换：" + id + " → " + (courses[idx].status === "pub" ? "已发布" : "草稿")); }
+    else if (act === "del") { if (confirm("确定删除课程 " + id + "？")) { courses.splice(idx, 1); save(); renderCourses($("#globalSearch").value); renderKpis(); renderDist(); toast("已删除 " + id); } }
+    else if (act === "edit") { toast("编辑 " + id + "（演示：编辑表单可后续接入）"); }
+  });
+
+  /* ---- add course modal ---- */
+  var modal = $("#modal");
+  function openModal() {
+    $("#f-track").innerHTML = tracks.map(function (t) { return '<option value="' + t.id + '">' + t.name_zh + "</option>"; }).join("");
+    $("#f-id").value = ""; $("#f-title").value = ""; $("#f-desc").value = ""; $("#f-hours").value = 24;
+    modal.classList.add("open");
+  }
+  function closeModal() { modal.classList.remove("open"); }
+  $("#addCourseBtn").addEventListener("click", openModal);
+  $("#modalClose").addEventListener("click", closeModal);
+  $("#modalCancel").addEventListener("click", closeModal);
+  modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+  $("#modalSave").addEventListener("click", function () {
+    var id = $("#f-id").value.trim() || ("NEW-" + (courses.length + 1));
+    if (courses.some(function (c) { return c.id === id; })) { toast("编号已存在：" + id); return; }
+    courses.unshift({ id: id, title_zh: $("#f-title").value.trim() || "未命名课程", title_en: "", track: $("#f-track").value,
+      level: $("#f-level").value, hours: parseInt($("#f-hours").value, 10) || 0, format: $("#f-format").value,
+      desc_zh: $("#f-desc").value.trim(), status: "draft", enroll: 0, learn: [] });
+    save(); renderCourses(""); renderKpis(); renderDist(); closeModal(); show("courses"); toast("已创建课程：" + id + "（草稿）");
+  });
+
+  /* ---- global search ---- */
+  $("#globalSearch").addEventListener("input", function () {
+    var v = this.value;
+    renderCourses(v); renderLearners(v);
+  });
+
+  /* ---- settings ---- */
+  $("#themeSeg").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-t]"); if (!b) return;
+    var t = b.getAttribute("data-t"); document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem("si-theme", t); } catch (e2) {}
+    syncThemeSeg();
+  });
+  function syncThemeSeg() { var cur = document.documentElement.getAttribute("data-theme"); $$("#themeSeg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-t") === cur); }); }
+  $("#saveSettings").addEventListener("click", function () { toast("设置已保存（演示）"); });
+
+  /* ---- mobile sidebar ---- */
+  $("#menuToggle").addEventListener("click", function () { $("#side").classList.toggle("open"); });
+
+  /* ---- init ---- */
+  renderKpis(); renderTrend(); renderDist(); renderActivity();
+  renderCourses(""); renderLearners(""); renderPaths(); renderRes(); syncThemeSeg();
+})();
+</script>
+</body>
+</html>
