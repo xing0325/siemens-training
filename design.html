@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>设计说明 · Engineered Editorial | SITRAIN Hub</title>
-<meta name="description" content="SITRAIN Hub 前端设计说明 —— Engineered Editorial 设计理念、配色系统、双主题、字体系统、标志性母题、组件库、动效与无障碍策略的可视化拆解。" />
+<title>设计思路 · 网站架构与学习者旅程 | SITRAIN Hub</title>
+<meta name="description" content="SITRAIN Hub 设计思路 —— 用可视化方式拆解网站信息架构、数据与渲染分层、无后端轻量路由、前台与后台双架构，并完整还原一位自动化工程师的学习者旅程与体验评估。" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -23,15 +23,15 @@
   })();
 </script>
 
-<!-- ===== Page-specific CSS (design explainer only) ===== -->
+<!-- ===== Page-specific CSS (architecture + journey explainer only) ===== -->
 <style>
   /* doc page header band */
   .doc-head { padding-block: clamp(44px, 7vw, 96px) clamp(28px, 4vw, 48px); position: relative; overflow: hidden; }
-  .doc-head__in { position: relative; z-index: 1; max-width: 880px; }
-  .doc-head h1 { font-size: clamp(34px, 5.6vw, 68px); font-weight: 900; line-height: .98; letter-spacing: -0.03em; margin-top: 22px; }
+  .doc-head__in { position: relative; z-index: 1; max-width: 900px; }
+  .doc-head h1 { font-size: clamp(34px, 5.6vw, 66px); font-weight: 900; line-height: .98; letter-spacing: -0.03em; margin-top: 22px; }
   .doc-head h1 .em { color: var(--primary); position: relative; white-space: nowrap; }
   .doc-head h1 .em::after { content: ""; position: absolute; left: 0; right: 0; bottom: .06em; height: .12em; background: linear-gradient(90deg, var(--accent-bright), transparent); opacity: .55; }
-  .doc-head .lead { margin-top: 24px; font-size: clamp(16px, 1.5vw, 19px); color: var(--text-soft); max-width: 60ch; }
+  .doc-head .lead { margin-top: 24px; font-size: clamp(16px, 1.5vw, 19px); color: var(--text-soft); max-width: 62ch; }
   .doc-head__badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 
   /* section numbering + sub-section heads */
@@ -44,204 +44,260 @@
   /* generic explainer card surface */
   .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(20px, 3vw, 30px); position: relative; }
   .panel--tint { background: var(--bg-alt); }
-
-  /* concept split (01) */
-  .concept { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
-  .concept__half { padding: clamp(22px, 3vw, 34px); }
-  .concept__half + .concept__half { }
-  .concept__mid { width: 1px; background: var(--line); position: relative; display: grid; place-items: center; }
-  .concept__plus { position: absolute; width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line-strong); display: grid; place-items: center; color: var(--primary); font-family: var(--font-mono); font-weight: 600; }
-  .concept h3 { font-size: clamp(19px, 2.2vw, 26px); font-weight: 800; letter-spacing: -0.01em; }
-  .concept .en { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-weak); letter-spacing: .08em; text-transform: uppercase; margin-top: 4px; }
-  .concept ul { margin-top: 16px; display: grid; gap: 9px; }
-  .concept li { font-size: 13.5px; color: var(--text-soft); display: flex; gap: 10px; align-items: flex-start; }
-  .concept li svg { width: 16px; height: 16px; color: var(--primary); flex: none; margin-top: 2px; }
-  .concept__eq { text-align: center; padding: 20px; font-family: var(--font-mono); font-size: clamp(14px, 1.6vw, 18px); color: var(--text); letter-spacing: .02em; border-top: 1px solid var(--line); background: var(--bg-alt); }
-  .concept__eq b { color: var(--primary); }
-
-  /* lineage flow (02) */
-  .flow { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: clamp(14px, 3vw, 32px); }
-  .flow__node { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px 22px; background: var(--surface); }
-  .flow__node--src { border-style: dashed; }
-  .flow__node--out { border-color: color-mix(in srgb, var(--primary) 40%, var(--line)); box-shadow: var(--sh-1); }
-  .flow__label { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-weak); }
-  .flow__node h4 { font-size: 17px; font-weight: 700; margin-top: 8px; letter-spacing: -0.01em; }
-  .flow__node p { font-size: 13px; color: var(--text-soft); margin-top: 8px; }
-  .flow__arrow { display: grid; place-items: center; color: var(--primary); }
-  .flow__arrow .reskin { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-top: 6px; white-space: nowrap; }
-  .flow__arrow svg { width: 30px; height: 30px; }
-
-  /* color swatches (03) */
-  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
-  .swatch { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--surface); }
-  .swatch__chip { height: 92px; position: relative; display: flex; align-items: flex-end; padding: 10px; }
-  .swatch__chip .hex { font-family: var(--font-mono); font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--r-sm); background: rgba(0,0,0,.28); color: #fff; backdrop-filter: blur(4px); }
-  .swatch__body { padding: 12px 14px; }
-  .swatch__name { font-weight: 700; font-size: 14px; }
-  .swatch__role { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); margin-top: 4px; line-height: 1.5; }
-  .swatch__tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); color: var(--text-soft); display: inline-block; margin-top: 8px; }
-  .swatch__tag.pass { color: var(--success); border-color: color-mix(in srgb, var(--success) 50%, var(--line)); }
-  .swatch__tag.warn { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 50%, var(--line)); }
-
-  /* neutral ramp */
-  .ramp { display: flex; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
-  .ramp__step { flex: 1; height: 64px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px; }
-  .ramp__step span { font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: var(--r-sm); background: rgba(0,0,0,.2); color: #fff; }
-
-  /* accent discipline diagram */
-  .accent-rule { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .accent-rule__col { border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; }
-  .accent-rule__col h5 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 10px; }
-  .accent-rule li { font-size: 13px; color: var(--text-soft); padding: 5px 0; display: flex; gap: 8px; align-items: center; }
-  .accent-rule li svg { width: 15px; height: 15px; flex: none; }
-  .accent-rule .yes svg { color: var(--accent); }
-  .accent-rule .no svg { color: var(--text-weak); }
-  .accent-rule .no { color: var(--text-weak); }
-
-  /* dual-theme compare (04) */
-  .themes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .theme-card { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
-  .theme-card__bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
-  .theme-card__bar .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .theme-card__swatches { display: flex; }
-  .theme-card__sw { flex: 1; height: 70px; display: flex; align-items: flex-end; padding: 6px; }
-  .theme-card__sw small { font-family: var(--font-mono); font-size: 9.5px; padding: 1px 4px; border-radius: 2px; background: rgba(0,0,0,.3); color: #fff; }
-  .theme-card__note { padding: 12px 14px; font-size: 12.5px; color: var(--text-soft); }
-  /* hard-coded swatch surfaces to show BOTH themes regardless of active theme */
-  .tc-light { background: #ffffff; color: #14191d; }
-  .tc-light .theme-card__bar { background: #eef1f2; color: #51606a; border-color: rgba(0,20,40,.12); }
-  .tc-dark { background: #0c1316; color: #eaf4f8; }
-  .tc-dark .theme-card__bar { background: #213037; color: #9fb2bc; border-color: rgba(170,210,230,.14); }
-
-  /* type specimens (05) */
-  .type-spec { border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(20px, 3vw, 32px); background: var(--surface); }
-  .type-spec + .type-spec { margin-top: 16px; }
-  .type-spec__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 14px; }
-  .type-spec__meta .name { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
-  .type-spec__meta .tech { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); letter-spacing: .06em; }
-  .specimen-sans { font-family: var(--font-sans); font-weight: 900; font-size: clamp(34px, 6vw, 64px); line-height: 1; letter-spacing: -0.03em; }
-  .specimen-mono { font-family: var(--font-mono); font-weight: 500; font-size: clamp(20px, 3.4vw, 34px); line-height: 1.2; letter-spacing: .01em; color: var(--primary); }
-  .weights { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
-  .weights span { font-family: var(--font-sans); font-size: 22px; }
-  .scale { display: grid; gap: 0; margin-top: 8px; }
-  .scale__row { display: flex; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
-  .scale__row .px { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); width: 52px; flex: none; }
-  .scale__row .smp { font-weight: 700; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-  /* motif demos (06) */
-  .motif-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-  .motif { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
-  .motif__demo { height: 150px; position: relative; overflow: hidden; background: var(--bg-alt); }
-  .motif__body { padding: 14px 16px; border-top: 1px solid var(--line); }
-  .motif__body h4 { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-  .motif__body h4 svg { width: 16px; height: 16px; color: var(--primary); }
-  .motif__body p { font-size: 12.5px; color: var(--text-soft); margin-top: 6px; }
-
-  /* blueprint grid demo */
-  .demo-grid::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(var(--grid-dot) 1px, transparent 1px), linear-gradient(90deg, var(--grid-dot) 1px, transparent 1px); background-size: 22px 22px; opacity: .9; }
-  .demo-grid::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--accent-bright) 1.3px, transparent 1.3px); background-size: 22px 22px; background-position: 11px 11px; opacity: .5; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000, transparent 75%); }
-
-  /* radius demo */
-  .demo-radius { display: grid; place-items: center; gap: 12px; grid-auto-flow: column; }
-  .radius-box { width: 56px; height: 56px; background: color-mix(in srgb, var(--primary) 16%, transparent); border: 1.5px solid var(--primary); display: grid; place-items: end; }
-  .radius-box small { font-family: var(--font-mono); font-size: 9px; color: var(--primary); padding: 2px; }
-  .radius-box.r0 { border-radius: 0; } .radius-box.r2 { border-radius: var(--r-sm); }
-  .radius-box.r4 { border-radius: var(--r); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-bright) 30%, transparent); }
-  .radius-box.r16 { border-radius: 16px; opacity: .45; }
-
-  /* shadow demo */
-  .demo-shadow { display: grid; place-items: center; grid-auto-flow: column; gap: 16px; }
-  .shadow-box { width: 52px; height: 52px; background: var(--surface); border-radius: var(--r); border: 1px solid var(--line); }
-  .shadow-box.s1 { box-shadow: var(--sh-1); } .shadow-box.s2 { box-shadow: var(--sh-2); } .shadow-box.s3 { box-shadow: var(--sh-3); }
-
-  /* hover-reveal card demo */
-  .demo-hover { display: grid; place-items: center; }
-  .mini-card { width: 70%; height: 86px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); position: relative; overflow: hidden; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); transition: transform .22s ease, box-shadow .22s ease; }
-  .mini-card::before { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
-  .motif:hover .mini-card { transform: translateY(-4px); box-shadow: var(--sh-2); }
-  .motif:hover .mini-card::before { transform: scaleX(1); }
-
-  /* console mini demo reuse hint */
-  .motif--wide { grid-column: 1 / -1; }
-  .motif--wide .motif__demo { height: auto; background: transparent; padding: 18px; }
-
-  /* component gallery (07) */
-  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; align-items: start; }
-  .gallery__cell { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 22px; background: var(--bg-alt); }
-  .gallery__cell .lbl { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-weak); margin-bottom: 16px; display: block; }
-  .gallery__demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .gallery__cell .stat { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
-
-  /* motion + a11y (08) */
-  .a11y-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-  .a11y-card { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 20px; background: var(--surface); }
-  .a11y-card .ic { width: 38px; height: 38px; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent); margin-bottom: 12px; }
-  .a11y-card .ic svg { width: 20px; height: 20px; }
-  .a11y-card h4 { font-size: 14.5px; font-weight: 700; }
-  .a11y-card p { font-size: 12.5px; color: var(--text-soft); margin-top: 6px; }
-  .focus-demo { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 14px; border-radius: var(--r); border: 1.5px solid var(--line-strong); font-family: var(--font-mono); font-size: 12px; outline: 2px solid var(--focus); outline-offset: 2px; }
-
-  /* stagger demo strip */
-  .stagger-demo { display: flex; gap: 8px; margin-top: 14px; }
-  .stagger-demo i { display: block; height: 30px; flex: 1; border-radius: var(--r-sm); background: linear-gradient(180deg, var(--surface-2), var(--bg-alt)); border: 1px solid var(--line); animation: floaty 2.6s ease-in-out infinite; }
-  .stagger-demo i:nth-child(2){ animation-delay: .12s } .stagger-demo i:nth-child(3){ animation-delay: .24s }
-  .stagger-demo i:nth-child(4){ animation-delay: .36s } .stagger-demo i:nth-child(5){ animation-delay: .48s }
-  @keyframes floaty { 0%,100% { transform: translateY(0); opacity: .7 } 50% { transform: translateY(-6px); opacity: 1 } }
-
-  /* tech stack (09) */
-  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
-  .tech-chip { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 20px; background: var(--surface); display: flex; gap: 14px; align-items: flex-start; }
-  .tech-chip .ic { width: 40px; height: 40px; flex: none; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent); }
-  .tech-chip .ic svg { width: 20px; height: 20px; }
-  .tech-chip h4 { font-size: 14.5px; font-weight: 700; }
-  .tech-chip p { font-size: 12.5px; color: var(--text-soft); margin-top: 5px; }
-  .deploy-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-
-  /* generic 2-col explainer split */
-  .split { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(20px, 4vw, 44px); align-items: start; }
   .stack-16 > * + * { margin-top: 16px; }
 
+  /* ============ 01 SITEMAP / page-map diagram ============ */
+  .sitemap { position: relative; }
+  .sitemap__row { display: flex; align-items: stretch; justify-content: center; gap: clamp(10px, 2vw, 22px); flex-wrap: wrap; }
+  .pmap {
+    position: relative; flex: 1 1 0; min-width: 178px; max-width: 280px;
+    border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface);
+    padding: 18px 18px 16px; box-shadow: var(--sh-1);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .pmap::before { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 100%; border-radius: var(--r-lg) var(--r-lg) 0 0; background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
+  .pmap:hover { transform: translateY(-3px); box-shadow: var(--sh-2); border-color: color-mix(in srgb, var(--primary) 40%, var(--line-strong)); }
+  .pmap:hover::before { transform: scaleX(1); }
+  .pmap__hd { display: flex; align-items: center; gap: 10px; }
+  .pmap__ic { width: 34px; height: 34px; flex: none; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent); }
+  .pmap__ic svg { width: 18px; height: 18px; }
+  .pmap__file { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); letter-spacing: .04em; }
+  .pmap__name { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; margin-top: 1px; }
+  .pmap__role { font-size: 12.5px; color: var(--text-soft); margin-top: 9px; line-height: 1.5; }
+  .pmap__url { font-family: var(--font-mono); font-size: 11px; color: var(--primary); margin-top: 10px; word-break: break-all; }
+  .pmap--funnel { border-color: color-mix(in srgb, var(--primary) 36%, var(--line)); }
+  .pmap--aux { background: var(--bg-alt); border-style: dashed; }
+  .pmap--self { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+
+  /* connectors between funnel boxes */
+  .pmap-flow { display: flex; align-items: center; color: var(--primary); flex: none; padding: 0 2px; }
+  .pmap-flow svg { width: 26px; height: 26px; }
+  .pmap-flow small { display: none; }
+
+  .sitemap__aux { display: flex; gap: clamp(10px, 2vw, 22px); justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+  .sitemap__brace { text-align: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-weak); margin: 22px 0 6px; }
+  .funnel-tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent); border-radius: var(--r-pill); padding: 6px 14px; }
+
+  /* ============ 02 FUNNEL — 3 stages ============ */
+  .funnel { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 2vw, 18px); position: relative; }
+  .fstep { position: relative; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+  .fstep__bar { height: 7px; background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); }
+  .fstep:nth-child(2) .fstep__bar { opacity: .8; }
+  .fstep:nth-child(3) .fstep__bar { opacity: .62; }
+  .fstep__in { padding: 20px 20px 22px; }
+  .fstep__n { font-family: var(--font-mono); font-size: 12px; color: var(--text-weak); letter-spacing: .08em; }
+  .fstep__stage { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin-top: 6px; display: flex; align-items: center; gap: 10px; }
+  .fstep__stage svg { width: 22px; height: 22px; color: var(--primary); flex: none; }
+  .fstep__page { font-family: var(--font-mono); font-size: 11.5px; color: var(--primary); margin-top: 8px; letter-spacing: .03em; }
+  .fstep__do { font-size: 13.5px; color: var(--text-soft); margin-top: 12px; line-height: 1.55; }
+  .fstep__metric { margin-top: 14px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-weak); display: flex; align-items: center; gap: 8px; }
+  .fstep__metric b { color: var(--success); font-weight: 600; }
+
+  /* ============ 03 DATA / RENDER architecture ============ */
+  .arch { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; gap: clamp(10px, 1.6vw, 18px); }
+  .anode { border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); padding: 20px; display: flex; flex-direction: column; }
+  .anode--src { border-style: dashed; border-color: color-mix(in srgb, var(--primary) 40%, var(--line-strong)); }
+  .anode--render { box-shadow: var(--sh-1); }
+  .anode__tag { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-weak); }
+  .anode__h { font-size: 16px; font-weight: 700; margin-top: 7px; display: flex; align-items: center; gap: 9px; letter-spacing: -0.01em; }
+  .anode__h svg { width: 18px; height: 18px; color: var(--primary); flex: none; }
+  .anode__code { font-family: var(--font-mono); font-size: 11.5px; color: var(--primary); margin-top: 4px; }
+  .anode__list { margin-top: 12px; display: grid; gap: 7px; }
+  .anode__list li { font-size: 12.5px; color: var(--text-soft); display: flex; gap: 8px; align-items: flex-start; line-height: 1.45; }
+  .anode__list li svg { width: 14px; height: 14px; color: var(--accent); flex: none; margin-top: 3px; }
+  .arch-arrow { display: grid; place-items: center; color: var(--primary); }
+  .arch-arrow svg { width: 28px; height: 28px; }
+  .arch-arrow small { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-top: 6px; white-space: nowrap; }
+  .fanout { margin-top: 14px; display: grid; gap: 8px; }
+  .fanout__pill { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 12px; color: var(--text-soft); border: 1px solid var(--line); border-radius: var(--r); padding: 8px 11px; background: var(--bg-alt); }
+  .fanout__pill svg { width: 15px; height: 15px; color: var(--primary); flex: none; }
+  .ls-band { margin-top: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border: 1px dashed var(--line-strong); border-radius: var(--r-lg); padding: 16px 20px; background: var(--bg-alt); }
+  .ls-band .ic { width: 38px; height: 38px; flex: none; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--primary); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+  .ls-band .ic svg { width: 20px; height: 20px; }
+  .ls-band__txt { flex: 1; min-width: 200px; }
+  .ls-band h4 { font-size: 14px; font-weight: 700; }
+  .ls-band p { font-size: 12.5px; color: var(--text-soft); margin-top: 3px; }
+  .ls-keys { display: flex; gap: 8px; flex-wrap: wrap; }
+  .codepill { font-family: var(--font-mono); font-size: 11px; color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent); border-radius: var(--r-pill); padding: 5px 11px; }
+
+  /* ============ 04 ROUTING ============ */
+  .routes { display: grid; gap: 14px; }
+  .route { display: grid; grid-template-columns: 240px auto 1fr; align-items: center; gap: clamp(12px, 2vw, 22px); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); padding: 16px 20px; }
+  .route__url { font-family: var(--font-mono); font-size: 13px; color: var(--text); word-break: break-all; line-height: 1.5; }
+  .route__url .k { color: var(--primary); font-weight: 600; }
+  .route__url .v { color: var(--accent); }
+  .route__arrow { color: var(--text-weak); display: grid; place-items: center; }
+  .route__arrow svg { width: 22px; height: 22px; }
+  .route__eff { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+  .route__eff b { color: var(--text); font-weight: 600; }
+  .route__badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-weak); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 3px 9px; margin-left: 8px; }
+
+  /* ============ 05 front vs back compare ============ */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .arch-card { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+  .arch-card__hd { display: flex; align-items: center; gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+  .arch-card__hd .ic { width: 40px; height: 40px; flex: none; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent); }
+  .arch-card__hd .ic svg { width: 21px; height: 21px; }
+  .arch-card__hd h4 { font-size: 16.5px; font-weight: 800; letter-spacing: -0.01em; }
+  .arch-card__hd .sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); letter-spacing: .04em; margin-top: 2px; }
+  .arch-card__body { padding: 16px 20px 20px; }
+  /* mini wireframes */
+  .wire { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--bg-alt); margin-bottom: 16px; }
+  .wire--top .wf-nav { height: 26px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 6px; padding: 0 10px; background: var(--surface); }
+  .wf-dot { width: 22px; height: 7px; border-radius: 2px; background: var(--surface-2); }
+  .wf-dot.brand { width: 34px; background: color-mix(in srgb, var(--primary) 40%, var(--surface-2)); }
+  .wf-dot.act { background: var(--primary); }
+  .wf-body { padding: 10px; display: grid; gap: 7px; }
+  .wf-line { height: 8px; border-radius: 2px; background: var(--surface-2); }
+  .wf-line.w70 { width: 70%; } .wf-line.w50 { width: 50%; } .wf-line.w90 { width: 90%; }
+  .wf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 3px; }
+  .wf-cell { height: 26px; border-radius: 2px; background: var(--surface-2); border: 1px solid var(--line); }
+  /* sidebar wireframe */
+  .wire--side .wf-shell { display: grid; grid-template-columns: 42px 1fr; min-height: 96px; }
+  .wf-side { background: var(--surface); border-right: 1px solid var(--line); padding: 8px 6px; display: grid; gap: 5px; align-content: start; }
+  .wf-sideitem { height: 8px; border-radius: 2px; background: var(--surface-2); }
+  .wf-sideitem.act { background: var(--primary); }
+  .wf-main { padding: 9px; display: grid; gap: 6px; align-content: start; }
+  .wf-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
+  .wf-kpi { height: 20px; border-radius: 2px; background: var(--surface-2); border: 1px solid var(--line); }
+  .arch-card ul { display: grid; gap: 9px; }
+  .arch-card li { font-size: 13px; color: var(--text-soft); display: flex; gap: 9px; align-items: flex-start; line-height: 1.5; }
+  .arch-card li svg { width: 15px; height: 15px; color: var(--primary); flex: none; margin-top: 3px; }
+  .shared-note { margin-top: 18px; text-align: center; }
+
+  /* ============ 06 static benefit chips ============ */
+  .benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(184px, 1fr)); gap: 14px; }
+  .benefit { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); padding: 20px; }
+  .benefit .ic { width: 40px; height: 40px; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 26%, transparent); margin-bottom: 13px; }
+  .benefit .ic svg { width: 21px; height: 21px; }
+  .benefit h4 { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .benefit p { font-size: 12.5px; color: var(--text-soft); margin-top: 6px; line-height: 1.5; }
+
+  /* ============ 07 persona ============ */
+  .persona { display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 3vw, 30px); align-items: center; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); padding: clamp(22px, 3vw, 32px); position: relative; overflow: hidden; box-shadow: var(--sh-1); }
+  .persona::after { content: ""; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent), transparent 68%); pointer-events: none; }
+  .persona__av { width: clamp(78px, 11vw, 104px); height: clamp(78px, 11vw, 104px); border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: clamp(26px, 4vw, 36px); color: var(--on-primary); background: linear-gradient(135deg, var(--petrol), var(--primary)); flex: none; box-shadow: var(--sh-1); }
+  .persona__body { position: relative; z-index: 1; }
+  .persona__tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--primary); }
+  .persona__name { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -0.01em; margin-top: 6px; }
+  .persona__name span { color: var(--text-weak); font-weight: 500; font-size: .62em; font-family: var(--font-mono); margin-left: 10px; }
+  .persona__meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .ptag { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-soft); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 6px 13px; }
+  .ptag svg { width: 14px; height: 14px; color: var(--primary); flex: none; }
+  .persona__goal { font-size: 14.5px; color: var(--text-soft); margin-top: 16px; line-height: 1.6; max-width: 60ch; }
+  .persona__goal b { color: var(--text); font-weight: 600; }
+
+  /* ============ 08 journey timeline ============ */
+  .timeline { position: relative; display: grid; gap: 16px; }
+  .timeline::before { content: ""; position: absolute; left: 27px; top: 14px; bottom: 14px; width: 2px; background: linear-gradient(180deg, var(--petrol), var(--accent-bright), transparent); }
+  .tstep { position: relative; display: grid; grid-template-columns: 56px 1fr; gap: 18px; align-items: start; }
+  .tstep__node { position: relative; z-index: 1; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 2px solid color-mix(in srgb, var(--primary) 50%, var(--line-strong)); color: var(--primary); font-family: var(--font-mono); font-weight: 600; font-size: 17px; box-shadow: var(--sh-1); }
+  .tstep__node svg { width: 22px; height: 22px; }
+  .tstep__card { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+  .tstep__hd { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .tstep__hd h4 { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
+  .tstep__page { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent); border-radius: var(--r-pill); padding: 4px 11px; margin-left: auto; }
+  .tstep__cols { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .tcol { padding: 15px 18px; border-right: 1px solid var(--line); }
+  .tcol:last-child { border-right: 0; }
+  .tcol__k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-weak); display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+  .tcol__k svg { width: 14px; height: 14px; flex: none; }
+  .tcol--do .tcol__k { color: var(--text-soft); }
+  .tcol--give .tcol__k { color: var(--primary); }
+  .tcol--why .tcol__k { color: var(--success); }
+  .tcol p { font-size: 13px; color: var(--text-soft); line-height: 1.55; }
+  .tcol code { font-family: var(--font-mono); font-size: 12px; color: var(--primary); }
+
+  /* ============ 09 scorecard ============ */
+  .score-note { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--warning); border: 1px solid color-mix(in srgb, var(--warning) 45%, var(--line)); border-radius: var(--r-pill); padding: 6px 13px; }
+  .score-note svg { width: 14px; height: 14px; flex: none; }
+  .scorecard { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; box-shadow: var(--sh-1); }
+  .srow { display: grid; grid-template-columns: 220px 1fr 64px; align-items: center; gap: clamp(14px, 2vw, 26px); padding: 16px clamp(18px, 2.4vw, 26px); border-bottom: 1px solid var(--line); }
+  .srow:last-child { border-bottom: 0; }
+  .srow__label { display: flex; align-items: center; gap: 11px; }
+  .srow__label .ic { width: 34px; height: 34px; flex: none; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 11%, transparent); color: var(--primary); }
+  .srow__label .ic svg { width: 18px; height: 18px; }
+  .srow__label .t { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .srow__label .why { font-family: var(--font-mono); font-size: 11px; color: var(--text-weak); margin-top: 2px; letter-spacing: .01em; }
+  .sbar { height: 9px; border-radius: var(--r-pill); background: var(--surface-2); overflow: hidden; position: relative; }
+  .sbar__fill { height: 100%; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); width: 0; box-shadow: 0 0 10px color-mix(in srgb, var(--accent-bright) 50%, transparent); }
+  .srow__num { font-family: var(--font-mono); font-size: 19px; font-weight: 600; color: var(--text); text-align: right; letter-spacing: -0.01em; }
+  .srow__num small { font-size: 11px; color: var(--text-weak); font-weight: 500; }
+  .score-overall { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 18px clamp(18px, 2.4vw, 26px); background: var(--bg-alt); border-top: 1px solid var(--line-strong); }
+  .score-overall .big { font-family: var(--font-mono); font-size: 34px; font-weight: 600; color: var(--primary); letter-spacing: -0.02em; }
+  .score-overall .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-weak); }
+  .score-overall .desc { font-size: 13px; color: var(--text-soft); margin-left: auto; max-width: 46ch; }
+
+  /* ============ 10 verdict ============ */
+  .verdict { border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--line)); border-radius: var(--r-lg); background: var(--bg-alt); padding: clamp(26px, 4vw, 44px); text-align: center; position: relative; overflow: hidden; }
+  .verdict .grid-bg { opacity: .5; }
+  .verdict__in { position: relative; z-index: 1; }
+  .verdict__q { font-size: clamp(20px, 3vw, 30px); font-weight: 800; letter-spacing: -0.015em; line-height: 1.3; max-width: 30ch; margin: 0 auto; }
+  .verdict__q .em { color: var(--primary); }
+  .verdict__sub { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .06em; color: var(--text-weak); margin-top: 16px; }
+
+  @media (max-width: 980px) {
+    .arch { grid-template-columns: 1fr; }
+    .arch-arrow svg { transform: rotate(90deg); }
+    .funnel { grid-template-columns: 1fr; }
+  }
   @media (max-width: 860px) {
-    .concept { grid-template-columns: 1fr; }
-    .concept__mid { width: auto; height: 1px; }
-    .flow { grid-template-columns: 1fr; }
-    .flow__arrow svg { transform: rotate(90deg); }
-    .themes, .accent-rule, .split { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .route { grid-template-columns: 1fr; gap: 10px; }
+    .route__arrow svg { transform: rotate(90deg); }
+    .tstep__cols { grid-template-columns: 1fr; }
+    .tcol { border-right: 0; border-bottom: 1px solid var(--line); }
+    .tcol:last-child { border-bottom: 0; }
+    .srow { grid-template-columns: 1fr; gap: 10px; }
+    .srow__num { text-align: left; }
   }
   @media (max-width: 600px) {
-    .scale__row .smp { font-size: 22px !important; }
+    .persona { grid-template-columns: 1fr; text-align: center; }
+    .persona__av { margin: 0 auto; }
+    .persona__meta { justify-content: center; }
   }
 </style>
 </head>
 <body>
 
-<!-- ===== SVG icon sprite (shared with site) ===== -->
+<!-- ===== SVG icon sprite (self-contained; every <use> below resolves here) ===== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></symbol>
   <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/></symbol>
   <symbol id="i-drive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
   <symbol id="i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v4M12 11.2L6.2 17M12 11.2L17.8 17"/></symbol>
-  <symbol id="i-edge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.3A3.5 3.5 0 0117 18z"/><path d="M12 11v4M10 13h4"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6z"/><path d="M9.2 12l2 2 3.6-4"/></symbol>
-  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
-  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/></symbol>
-  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
-  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
-  <symbol id="i-type" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></symbol>
   <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" opacity=".55"/></symbol>
   <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1"/><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
   <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.4"/><circle cx="18" cy="5" r="2.4"/><path d="M8.4 19H14a4 4 0 000-8H9a4 4 0 010-8h6.6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9a1 1 0 001 1h10a1 1 0 001-1v-9"/><path d="M10 20v-6h4v6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="i-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a0 0 0 010 0H5a0 0 0 010 0V4z"/><path d="M8 4v5h7M8 14h8v6H8z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 10-5.7-5.7l-1.5 1.5"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 105.7 5.7l1.5-1.5"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5.5a1.5 1.5 0 013 0V11m0-1V4.5a1.5 1.5 0 013 0V11m0-.5V6a1.5 1.5 0 013 0v7a7 7 0 01-7 7h-1.2a5 5 0 01-3.9-1.9l-3-3.8a1.6 1.6 0 012.4-2.1L9 14V5.5a1.5 1.5 0 013 0"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"/><path d="M4 12h16M12 9v11M12 9S10.5 5 8.5 5 6 7.5 8 9M12 9s1.5-4 3.5-4S18 7.5 16 9"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0114 0"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M3 19a6 6 0 0112 0"/><path d="M16 5.2a3.4 3.4 0 010 6.4M18 19a6 6 0 00-3-5.2"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-mobile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6z"/><path d="M9.2 12l2 2 3.6-4"/></symbol>
+  <symbol id="i-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></symbol>
+  <symbol id="i-sidebar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
 </svg>
 
 <!-- ===== Header ===== -->
@@ -249,7 +305,7 @@
   <div class="wrap header__inner">
     <a class="brand" href="index.html#top" aria-label="SITRAIN Hub 首页">
       <span class="brand__mark">SIEMENS</span>
-      <span class="brand__sub">SITRAIN Hub · 设计说明</span>
+      <span class="brand__sub">SITRAIN Hub · 设计思路</span>
     </a>
     <div class="header__actions" style="margin-left:auto">
       <button class="theme-toggle" id="themeToggle" aria-label="切换深色/浅色主题">
@@ -267,537 +323,491 @@
 <section class="doc-head">
   <div class="grid-bg"></div>
   <div class="wrap doc-head__in reveal">
-    <div class="kicker">设计说明 / DESIGN RATIONALE</div>
-    <h1>Engineered <span class="em">Editorial</span><br>设计思维拆解</h1>
-    <p class="lead">这是 SITRAIN Hub 前端的设计说明文档：用可视化的方式拆解每一个设计决策——为什么这样配色、为什么选这套字体、标志性母题从何而来。一份培训门户，必须读起来权威、可信、高级，且一眼是西门子，而非千篇一律的模板站。</p>
+    <div class="kicker">设计思路 / DESIGN THINKING</div>
+    <h1>网站架构<span class="em">设计思路</span><br>与学习者旅程</h1>
+    <p class="lead">这份文档用可视化方式回答两件事：(A) 这个西门子工业培训门户是<b>怎么搭起来的</b>——信息架构、数据分层、轻量路由、前台与后台的双重架构；(B) 一位真实的学习者<b>怎么用它、用得有多顺</b>。少文字、多图解。</p>
     <div class="doc-head__badges">
-      <span class="chip"><b></b>Siemens iX 设计语言</span>
-      <span class="chip"><b></b>编辑式排版结构</span>
-      <span class="chip"><b></b>工业驾驶舱深色主题</span>
-      <span class="chip"><b></b>WCAG 2.2 AA</span>
+      <span class="chip"><b></b>5 个页面 · 单一数据源</span>
+      <span class="chip"><b></b>无后端 · 纯静态</span>
+      <span class="chip"><b></b>组件写一次 · 多页复用</span>
+      <span class="chip"><b></b>发现 → 浏览 → 学习</span>
     </div>
   </div>
 </section>
 
 <hr class="rule" />
 
-<!-- ===== 01 设计概念 ===== -->
+<!-- ============================================================ -->
+<!-- PART A — 网站架构设计思路                                      -->
+<!-- ============================================================ -->
+
+<!-- ===== 01 站点地图 / 信息架构 ===== -->
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">设计概念 / DESIGN CONCEPT</div>
-      <h2><span class="sect-num">01</span>&nbsp; "Engineered Editorial" 工程化编辑美学</h2>
-      <p>把杂志/编辑设计的结构感，嫁接到工业工程的精密感上——这是整站气质的根。</p>
+      <div class="kicker">第一部分 · 架构 / PART A — ARCHITECTURE</div>
+      <h2><span class="sect-num">01</span>&nbsp; 站点地图与信息架构</h2>
+      <p>全站 5 个页面。三个面向学习者的页面串成一条主漏斗；管理后台与本设计页作为独立节点，不打扰学习者动线。</p>
     </div>
 
-    <div class="concept reveal">
-      <div class="concept__half">
-        <h3>编辑 / 杂志结构</h3>
-        <div class="en">Editorial Structure</div>
-        <ul>
-          <li><svg><use href="#i-type"/></svg> 强烈的字号层级与负字距标题</li>
-          <li><svg><use href="#i-grid"/></svg> 结构化栅格与大面积留白</li>
-          <li><svg><use href="#i-code"/></svg> 等宽 eyebrow 眉标 + 序号索引（01–09）</li>
+    <div class="panel reveal">
+      <div class="sitemap__brace">学习者主漏斗 / LEARNER FUNNEL</div>
+      <div class="sitemap__row">
+        <div class="pmap pmap--funnel">
+          <div class="pmap__hd"><span class="pmap__ic"><svg><use href="#i-home"/></svg></span><div><div class="pmap__file">index.html</div><div class="pmap__name">首页</div></div></div>
+          <div class="pmap__role">落地与发现：英雄区 + 工业控制台 + 数据 + 6 条学习路径 + 学练证三支柱 + 精选课程 + 资料 + 学员反馈。</div>
+          <div class="pmap__url">/ · 发现 DISCOVER</div>
+        </div>
+        <div class="pmap-flow"><svg><use href="#i-arrow"/></svg></div>
+        <div class="pmap pmap--funnel">
+          <div class="pmap__hd"><span class="pmap__ic"><svg><use href="#i-list"/></svg></span><div><div class="pmap__file">catalog.html</div><div class="pmap__name">课程目录</div></div></div>
+          <div class="pmap__role">浏览与检索：路径筛选 + 等级筛选 + 关键词搜索，实时计数。读取 <code>?track=</code> 预筛。</div>
+          <div class="pmap__url">/catalog · 浏览 BROWSE</div>
+        </div>
+        <div class="pmap-flow"><svg><use href="#i-arrow"/></svg></div>
+        <div class="pmap pmap--funnel">
+          <div class="pmap__hd"><span class="pmap__ic"><svg><use href="#i-play"/></svg></span><div><div class="pmap__file">course.html</div><div class="pmap__name">课程查看</div></div></div>
+          <div class="pmap__role">学习与沉浸：视频播放器 + 章节目录 + 你将学到 + 讲师 + 报名/进度侧栏。读取 <code>?id=</code> 加载课程。</div>
+          <div class="pmap__url">/course · 学习 LEARN</div>
+        </div>
+      </div>
+
+      <div class="sitemap__brace">独立节点 / STANDALONE NODES</div>
+      <div class="sitemap__aux">
+        <div class="pmap pmap--aux">
+          <div class="pmap__hd"><span class="pmap__ic"><svg><use href="#i-grid"/></svg></span><div><div class="pmap__file">admin.html</div><div class="pmap__name">管理后台</div></div></div>
+          <div class="pmap__role">运营侧：侧栏 app-shell，总览 KPI/图表、课程 CRUD、学员、路径、资料、设置。面向管理员，不在学习者动线内。</div>
+        </div>
+        <div class="pmap pmap--self">
+          <div class="pmap__hd"><span class="pmap__ic"><svg><use href="#i-compass"/></svg></span><div><div class="pmap__file">design.html</div><div class="pmap__name">设计思路（本页）</div></div></div>
+          <div class="pmap__role">交付侧：向客户/协作者讲清楚架构思路与体验设计。复用同一套设计令牌与主题。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 02 三层学习漏斗 ===== -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">学习漏斗 / LEARNING FUNNEL</div>
+      <h2><span class="sect-num">02</span>&nbsp; 发现 → 浏览 → 学习</h2>
+      <p>三个阶段，一一对应到一个页面。每往下一层，意图越聚焦、干扰越少——逐级收窄，把"逛"转化为"学"。</p>
+    </div>
+
+    <div class="funnel reveal" data-stagger>
+      <div class="fstep">
+        <div class="fstep__bar"></div>
+        <div class="fstep__in">
+          <div class="fstep__n">STAGE 01</div>
+          <div class="fstep__stage"><svg><use href="#i-compass"/></svg>发现</div>
+          <div class="fstep__page">index.html</div>
+          <div class="fstep__do">建立信任、传达"这是西门子工业培训"，用 6 条学习路径让人快速对号入座。</div>
+          <div class="fstep__metric"><svg><use href="#i-target"/></svg>产出 · <b>选定一条学习路径</b></div>
+        </div>
+      </div>
+      <div class="fstep">
+        <div class="fstep__bar"></div>
+        <div class="fstep__in">
+          <div class="fstep__n">STAGE 02</div>
+          <div class="fstep__stage"><svg><use href="#i-filter"/></svg>浏览</div>
+          <div class="fstep__page">catalog.html?track=…</div>
+          <div class="fstep__do">在已预筛的路径里，用等级与搜索进一步收窄，凭课程卡上的编号/等级/学时一眼判断。</div>
+          <div class="fstep__metric"><svg><use href="#i-target"/></svg>产出 · <b>锁定一门具体课程</b></div>
+        </div>
+      </div>
+      <div class="fstep">
+        <div class="fstep__bar"></div>
+        <div class="fstep__in">
+          <div class="fstep__n">STAGE 03</div>
+          <div class="fstep__stage"><svg><use href="#i-play"/></svg>学习</div>
+          <div class="fstep__page">course.html?id=…</div>
+          <div class="fstep__do">进入聚合的学习环境：播放器 + 章节 + 学习目标 + 讲师 + 进度侧栏，沉浸不分心。</div>
+          <div class="fstep__metric"><svg><use href="#i-target"/></svg>产出 · <b>开始学并接续下一门</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 03 数据与渲染架构 ===== -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">数据与渲染 / DATA & RENDER</div>
+      <h2><span class="sect-num">03</span>&nbsp; 单一数据源 → 复用组件 → 各页面</h2>
+      <p>内容只写在一处。app.js 把数据渲染成共享组件并挂到 <code>window.SITRAIN</code>，目录/课程/后台都复用——组件写一次，多页复用。</p>
+    </div>
+
+    <div class="arch reveal">
+      <div class="anode anode--src">
+        <span class="anode__tag">单一数据源 / SOURCE OF TRUTH</span>
+        <div class="anode__h"><svg><use href="#i-database"/></svg>数据层</div>
+        <div class="anode__code">assets/data.js</div>
+        <ul class="anode__list">
+          <li><svg><use href="#i-check"/></svg>window.SITE_DATA</li>
+          <li><svg><use href="#i-check"/></svg>identity · nav · stats</li>
+          <li><svg><use href="#i-check"/></svg>tracks ×6 · courses ×17</li>
+          <li><svg><use href="#i-check"/></svg>testimonials · resources · pillars</li>
         </ul>
       </div>
-      <div class="concept__mid"><span class="concept__plus">+</span></div>
-      <div class="concept__half">
-        <h3>工程 / 工业精密</h3>
-        <div class="en">Industrial Precision · Siemens iX</div>
-        <ul>
-          <li><svg><use href="#i-chip"/></svg> 4px 锐利圆角，拒绝圆润可爱</li>
-          <li><svg><use href="#i-drive"/></svg> 诊断面板、实时读数等机械母题</li>
-          <li><svg><use href="#i-target"/></svg> 克制的单一强调色，纪律化中性色</li>
+
+      <div class="arch-arrow"><svg><use href="#i-arrow"/></svg><small>读取 / read</small></div>
+
+      <div class="anode anode--render">
+        <span class="anode__tag">渲染 + 组件 / RENDER LAYER</span>
+        <div class="anode__h"><svg><use href="#i-cog"/></svg>逻辑层</div>
+        <div class="anode__code">assets/app.js</div>
+        <ul class="anode__list">
+          <li><svg><use href="#i-check"/></svg>主题初始化 + 导航 + 抽屉</li>
+          <li><svg><use href="#i-check"/></svg>滚动错峰入场</li>
+          <li><svg><use href="#i-check"/></svg>渲染首页各栅格</li>
+        </ul>
+        <div class="fanout">
+          <div class="fanout__pill"><svg><use href="#i-code"/></svg>SITRAIN.courseCard()</div>
+          <div class="fanout__pill"><svg><use href="#i-code"/></svg>SITRAIN.pathCard()</div>
+          <div class="fanout__pill"><svg><use href="#i-code"/></svg>SITRAIN.icon() · LV_ZH</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><svg><use href="#i-arrow"/></svg><small>复用 / reuse</small></div>
+
+      <div class="anode">
+        <span class="anode__tag">消费方 / CONSUMERS</span>
+        <div class="anode__h"><svg><use href="#i-layers"/></svg>各页面</div>
+        <div class="anode__code">index · catalog · course · admin</div>
+        <ul class="anode__list">
+          <li><svg><use href="#i-check"/></svg>首页：路径卡 / 课程卡 / 反馈</li>
+          <li><svg><use href="#i-check"/></svg>目录：courseCard 渲染结果</li>
+          <li><svg><use href="#i-check"/></svg>课程页：由数据合成章节</li>
+          <li><svg><use href="#i-check"/></svg>后台：复用 LV_ZH / icon</li>
         </ul>
       </div>
-      <div class="concept__eq" style="grid-column:1/-1">
-        编辑结构 <b>×</b> 工程精密 <b>=</b> 权威 · 可信 · 高级 · 一眼西门子
+    </div>
+
+    <div class="ls-band reveal">
+      <span class="ic"><svg><use href="#i-save"/></svg></span>
+      <div class="ls-band__txt">
+        <h4>状态层 · localStorage（无数据库）</h4>
+        <p>浏览器本地保存两类状态，刷新与跨页都不丢；后台对课程的增删改也只落在本地。</p>
+      </div>
+      <div class="ls-keys">
+        <span class="codepill">si-theme · 主题偏好（全站共享）</span>
+        <span class="codepill">si-admin-courses-v1 · 后台课程 CRUD</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 02 结构来源 ===== -->
+<!-- ===== 04 无后端的轻量路由 ===== -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">结构来源 / LAYOUT LINEAGE</div>
-      <h2><span class="sect-num">02</span>&nbsp; 骨架取自课程知识库，整体换肤为西门子</h2>
-      <p>布局骨架参考了课程知识库站点 sc.yaowee.cn 的信息组织方式，再从配色、字体到母题全面重塑为西门子语言。</p>
+      <div class="kicker">轻量路由 / LIGHTWEIGHT ROUTING</div>
+      <h2><span class="sect-num">04</span>&nbsp; 没有后端，也能"路由"</h2>
+      <p>不引服务器、不上框架路由。靠跨页链接、顶部锚点导航和 URL 查询参数，就完成了页面间的状态传递。</p>
     </div>
 
-    <div class="flow reveal">
-      <div class="flow__node flow__node--src">
-        <div class="flow__label">参考骨架 / Reference</div>
-        <h4>sc.yaowee.cn</h4>
-        <p>课程知识库的信息架构：路径 → 课程 → 详情，导航与栅格组织逻辑。</p>
+    <div class="routes reveal" data-stagger>
+      <div class="route">
+        <div class="route__url"><span class="k">catalog.html</span>?<span class="v">track=</span>track-simatic-tia</div>
+        <div class="route__arrow"><svg><use href="#i-arrow"/></svg></div>
+        <div class="route__eff"><b>预筛路径</b>：目录页读取 <code>?track=</code>，进入即把路径筛选器锁定到该路径，无需用户手动翻找。<span class="route__badge">URL 参数</span></div>
       </div>
-      <div class="flow__arrow">
-        <svg><use href="#i-arrow"/></svg>
-        <span class="reskin">完全换肤 / Re-skin</span>
+      <div class="route">
+        <div class="route__url"><span class="k">course.html</span>?<span class="v">id=</span>TIA-201</div>
+        <div class="route__arrow"><svg><use href="#i-arrow"/></svg></div>
+        <div class="route__eff"><b>定位课程</b>：课程页读取 <code>?id=</code> 在数据源中查到对应课程并渲染全部内容与面包屑。<span class="route__badge">URL 参数</span></div>
       </div>
-      <div class="flow__node flow__node--out">
-        <div class="flow__label">最终产物 / Output</div>
-        <h4>SITRAIN Hub</h4>
-        <p>沿用结构骨架，视觉层 100% 重建：iX 配色、Archivo + Plex Mono、驾驶舱主题与诊断母题。</p>
+      <div class="route">
+        <div class="route__url"><span class="k">index.html</span><span class="v">#paths</span> · <span class="v">#resources</span> · <span class="v">#voices</span></div>
+        <div class="route__arrow"><svg><use href="#i-arrow"/></svg></div>
+        <div class="route__eff"><b>锚点导航</b>：顶部导航与页脚用同页锚点平滑滚动，跨页则回到首页对应分区。<span class="route__badge">锚点</span></div>
       </div>
     </div>
-    <p class="caption mono reveal" style="margin-top:18px">仅借鉴信息结构 · 不复用任何视觉资产</p>
+    <p class="caption mono reveal" style="margin-top:16px">链接即接口 · 状态写在 URL 里，可收藏、可分享、可直达 —— 零路由库</p>
   </div>
 </section>
 
-<!-- ===== 03 配色系统 ===== -->
+<!-- ===== 05 前台 vs 后台 ===== -->
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">配色系统 / COLOR SYSTEM</div>
-      <h2><span class="sect-num">03</span>&nbsp; 一个表现色，对抗一整套纪律化中性色</h2>
-      <p>原则：唯一的表现性强调色（电光青），只用于线条、辉光、悬停与焦点，绝不用于正文。品牌色与可交互色严格分工。</p>
+      <div class="kicker">双重架构 / TWO ARCHITECTURES</div>
+      <h2><span class="sect-num">05</span>&nbsp; 前台发现漏斗 · 后台 App-Shell</h2>
+      <p>两种截然不同的导航范式，却说同一种设计语言——共用 styles.css 的一套设计令牌与明暗主题。</p>
     </div>
 
-    <div class="reveal" style="margin-bottom:28px">
-      <div class="sub-head">品牌 & 交互色 / Brand &amp; Interactive</div>
-      <div class="swatch-grid">
-        <div class="swatch">
-          <div class="swatch__chip" style="background:#009999"><span class="hex">#009999</span></div>
-          <div class="swatch__body">
-            <div class="swatch__name">Siemens Petrol</div>
-            <div class="swatch__role">--petrol · 品牌字标 / 图形专用</div>
-            <span class="swatch__tag warn">正文对比不足 · 仅装饰</span>
-          </div>
+    <div class="compare reveal">
+      <div class="arch-card">
+        <div class="arch-card__hd">
+          <span class="ic"><svg><use href="#i-window"/></svg></span>
+          <div><h4>公开站 · 顶部导航</h4><div class="sub">index · catalog · course</div></div>
         </div>
-        <div class="swatch">
-          <div class="swatch__chip" style="background:#006e93"><span class="hex">#006e93</span></div>
-          <div class="swatch__body">
-            <div class="swatch__name">Interactive Primary</div>
-            <div class="swatch__role">--primary · 链接 / 按钮 / 可交互</div>
-            <span class="swatch__tag pass">更深 · 通过 AA</span>
-          </div>
-        </div>
-        <div class="swatch">
-          <div class="swatch__chip" style="background:#00eaff"><span class="hex" style="background:rgba(0,0,0,.4)">#00eaff</span></div>
-          <div class="swatch__body">
-            <div class="swatch__name">Electric Cyan</div>
-            <div class="swatch__role">--accent-bright · 线条 / 辉光 / 悬停 / 焦点</div>
-            <span class="swatch__tag warn">绝不用于正文</span>
-          </div>
-        </div>
-        <div class="swatch">
-          <div class="swatch__chip" style="background:#00c2d6"><span class="hex">#00c2d6</span></div>
-          <div class="swatch__body">
-            <div class="swatch__name">Accent (Tamed)</div>
-            <div class="swatch__role">--accent · 浅色背景下略压低的青</div>
-            <span class="swatch__tag">图形强调</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="split">
-      <div class="reveal">
-        <div class="sub-head">中性灰阶 / Neutral Ramp（浅色）</div>
-        <div class="ramp">
-          <div class="ramp__step" style="background:#ffffff"><span>#ffffff</span></div>
-          <div class="ramp__step" style="background:#f3f5f6"><span>#f3f5f6</span></div>
-          <div class="ramp__step" style="background:#eef1f2"><span>#eef1f2</span></div>
-          <div class="ramp__step" style="background:#7c8a93"><span>#7c8a93</span></div>
-          <div class="ramp__step" style="background:#51606a"><span>#51606a</span></div>
-          <div class="ramp__step" style="background:#14191d"><span>#14191d</span></div>
-        </div>
-        <p class="caption" style="margin-top:10px">从 --bg 到 --text：表面、分隔线、弱/次/主文本，全部建立在冷调中性灰上。</p>
-      </div>
-      <div class="reveal">
-        <div class="sub-head">状态色 / Status</div>
-        <div class="swatch-grid" style="grid-template-columns:1fr 1fr">
-          <div class="swatch"><div class="swatch__chip" style="background:#2c8500"><span class="hex">#2c8500</span></div><div class="swatch__body"><div class="swatch__name" style="font-size:13px">Success</div><div class="swatch__role">--success</div></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#c77700"><span class="hex">#c77700</span></div><div class="swatch__body"><div class="swatch__name" style="font-size:13px">Warning</div><div class="swatch__role">--warning</div></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#0041b2"><span class="hex">#0041b2</span></div><div class="swatch__body"><div class="swatch__name" style="font-size:13px">Info</div><div class="swatch__role">--info</div></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#199fff"><span class="hex">#199fff</span></div><div class="swatch__body"><div class="swatch__name" style="font-size:13px">Focus</div><div class="swatch__role">--focus · 焦点环</div></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel--tint reveal" style="margin-top:24px">
-      <div class="sub-head">强调色纪律 / Accent Discipline</div>
-      <div class="accent-rule">
-        <div class="accent-rule__col">
-          <h5>电光青可以 / Cyan IS for</h5>
-          <ul>
-            <li class="yes"><svg><use href="#i-check"/></svg>悬停时的下划线/顶边揭示</li>
-            <li class="yes"><svg><use href="#i-check"/></svg>焦点辉光与状态点</li>
-            <li class="yes"><svg><use href="#i-check"/></svg>诊断面板的扫描线</li>
-            <li class="yes"><svg><use href="#i-check"/></svg>分隔短线与图形点缀</li>
-          </ul>
-        </div>
-        <div class="accent-rule__col">
-          <h5>电光青绝不 / Cyan is NOT for</h5>
-          <ul>
-            <li class="no"><svg><use href="#i-x"/></svg>正文文字</li>
-            <li class="no"><svg><use href="#i-x"/></svg>大面积填充背景</li>
-            <li class="no"><svg><use href="#i-x"/></svg>主按钮底色（用 --primary）</li>
-            <li class="no"><svg><use href="#i-x"/></svg>承载关键信息的唯一手段</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 04 双主题 ===== -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">双主题 / DUAL THEME</div>
-      <h2><span class="sect-num">04</span>&nbsp; 浅色编辑 · 深色工业驾驶舱</h2>
-      <p>深色主题致敬西门子标志性的工业 HMI "驾驶舱" 观感：近黑底色 + 青色主交互。切换状态通过 localStorage 持久化。</p>
-    </div>
-
-    <div class="themes reveal">
-      <div class="theme-card tc-light">
-        <div class="theme-card__bar"><span class="dot" style="background:#2c8500;box-shadow:0 0 8px #2c8500"></span>LIGHT · 编辑默认<span style="margin-left:auto;font-size:10px;color:#7c8a93">DEFAULT</span></div>
-        <div class="theme-card__swatches">
-          <div class="theme-card__sw" style="background:#ffffff"><small>bg #ffffff</small></div>
-          <div class="theme-card__sw" style="background:#f3f5f6"><small style="background:rgba(0,0,0,.5)">alt #f3f5f6</small></div>
-          <div class="theme-card__sw" style="background:#006e93"><small>#006e93</small></div>
-          <div class="theme-card__sw" style="background:#00c2d6"><small>#00c2d6</small></div>
-        </div>
-        <div class="theme-card__note">明亮、克制、可读——作为权威阅读环境的默认态。文字 #14191d，主交互 #006e93。</div>
-      </div>
-      <div class="theme-card tc-dark">
-        <div class="theme-card__bar"><span class="dot" style="background:#00eaff;box-shadow:0 0 8px #00eaff"></span>DARK · 工业驾驶舱<span style="margin-left:auto;font-size:10px;color:#6f828c">COCKPIT</span></div>
-        <div class="theme-card__swatches">
-          <div class="theme-card__sw" style="background:#0c1316"><small>bg #0c1316</small></div>
-          <div class="theme-card__sw" style="background:#18242a"><small>surf #18242a</small></div>
-          <div class="theme-card__sw" style="background:#00bde3"><small style="color:#04222b">#00bde3</small></div>
-          <div class="theme-card__sw" style="background:#00eaff"><small style="color:#04222b">#00eaff</small></div>
-        </div>
-        <div class="theme-card__note">近黑底 #0c1316 / 表面 #18242a，青色主交互 #00bde3——像盯着一块 HMI 操作屏。</div>
-      </div>
-    </div>
-    <p class="caption mono reveal" style="margin-top:16px">右上角切换按钮即时生效 · localStorage["si-theme"] 持久化 · 跟随系统偏好 · 注入无闪烁脚本</p>
-  </div>
-</section>
-
-<!-- ===== 05 字体系统 ===== -->
-<section class="section">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">字体系统 / TYPOGRAPHY</div>
-      <h2><span class="sect-num">05</span>&nbsp; Archivo + IBM Plex Mono</h2>
-      <p>刻意避开"一眼 AI / Bootstrap"的 Inter——选用更有性格的工业 grotesque 体 Archivo，叠加传递工程感的等宽 Plex Mono。</p>
-    </div>
-
-    <div class="type-spec reveal">
-      <div class="type-spec__meta">
-        <span class="name">Archivo</span>
-        <span class="tech">--font-sans · 展示 + 正文 · 工业 grotesque</span>
-      </div>
-      <div class="specimen-sans">从 PLC 到云端</div>
-      <div class="weights">
-        <span style="font-weight:400">400 Regular</span>
-        <span style="font-weight:500">500 Medium</span>
-        <span style="font-weight:600">600 SemiBold</span>
-        <span style="font-weight:700">700 Bold</span>
-        <span style="font-weight:800">800 ExtraBold</span>
-        <span style="font-weight:900">900 Black</span>
-      </div>
-      <p class="caption" style="margin-top:14px">为什么不是 Inter：Inter 安全但泛滥，会让企业站显得像模板。Archivo 同样专业，却带有不易察觉的工业个性。</p>
-    </div>
-
-    <div class="type-spec reveal">
-      <div class="type-spec__meta">
-        <span class="name">IBM Plex Mono</span>
-        <span class="tech">--font-mono · 技术标签 / 课程代码 / 数据 / eyebrow</span>
-      </div>
-      <div class="specimen-mono">TIA-201 · 1.24 ms · 99.9%</div>
-      <p class="caption" style="margin-top:14px">等宽体承载课程代码（如 TIA-201）、KPI 数字、诊断读数与眉标——一出现就在说"这是工程"。</p>
-    </div>
-
-    <div class="type-spec reveal">
-      <div class="type-spec__meta">
-        <span class="name">字号体系</span>
-        <span class="tech">Type Scale · px</span>
-      </div>
-      <div class="scale">
-        <div class="scale__row"><span class="px">52px</span><span class="smp" style="font-size:52px">系统精通数字化工业</span></div>
-        <div class="scale__row"><span class="px">40px</span><span class="smp" style="font-size:40px">学习路径与课程</span></div>
-        <div class="scale__row"><span class="px">32px</span><span class="smp" style="font-size:32px">按岗位选你的路线</span></div>
-        <div class="scale__row"><span class="px">24px</span><span class="smp" style="font-size:24px">SIMATIC S7 与 TIA 博途</span></div>
-        <div class="scale__row"><span class="px">20px</span><span class="smp" style="font-size:20px">虚拟练习实验室</span></div>
-        <div class="scale__row"><span class="px">16px</span><span class="smp" style="font-size:16px;font-weight:400">正文基准——边学、边练、边认证。</span></div>
-        <div class="scale__row"><span class="px">14px</span><span class="smp" style="font-size:14px;font-weight:400">次要说明文字与卡片描述。</span></div>
-        <div class="scale__row"><span class="px">12px</span><span class="smp" style="font-size:12px;font-family:var(--font-mono);font-weight:500;letter-spacing:.12em">EYEBROW · MONO LABEL</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 06 标志性母题 ===== -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">标志性母题 / SIGNATURE MOTIFS</div>
-      <h2><span class="sect-num">06</span>&nbsp; 让页面读起来像一台运转的机器</h2>
-      <p>几个反复出现的视觉母题，构成了"一眼西门子"的记忆点。下面是可交互的实时小样（悬停卡片试试顶边揭示）。</p>
-    </div>
-
-    <div class="motif-grid reveal" data-stagger>
-      <div class="motif">
-        <div class="motif__demo demo-grid"></div>
-        <div class="motif__body">
-          <h4><svg><use href="#i-grid"/></svg>蓝图栅格底纹</h4>
-          <p>线 + 点的工程方格纸纹理，径向遮罩淡出，铺在 Hero 与 CTA 背后。</p>
-        </div>
-      </div>
-
-      <div class="motif">
-        <div class="motif__demo demo-radius">
-          <div class="radius-box r0"><small>0</small></div>
-          <div class="radius-box r4"><small>4px</small></div>
-          <div class="radius-box r16"><small>16px</small></div>
-        </div>
-        <div class="motif__body">
-          <h4><svg><use href="#i-chip"/></svg>4px 锐利圆角</h4>
-          <p>iX 工程感来自克制的 --r:4px；16px 那种圆润被刻意排除（已淡化示意）。</p>
-        </div>
-      </div>
-
-      <div class="motif">
-        <div class="motif__demo demo-shadow">
-          <div class="shadow-box s1"></div>
-          <div class="shadow-box s2"></div>
-          <div class="shadow-box s3"></div>
-        </div>
-        <div class="motif__body">
-          <h4><svg><use href="#i-layers"/></svg>柔和分层阴影</h4>
-          <p>--sh-1 / 2 / 3 三档双层投影，营造克制而有物理感的浮起层级。</p>
-        </div>
-      </div>
-
-      <div class="motif">
-        <div class="motif__demo demo-hover">
-          <div class="mini-card">HOVER ME</div>
-        </div>
-        <div class="motif__body">
-          <h4><svg><use href="#i-bolt"/></svg>卡片顶边青色揭示</h4>
-          <p>悬停时卡片上浮，petrol→cyan 渐变顶边从左扫出——全站统一的微交互。</p>
-        </div>
-      </div>
-
-      <!-- signature hero console — the memorable live machine readout -->
-      <div class="motif motif--wide">
-        <div class="motif__demo">
-          <div class="console">
-            <div class="console__bar">
-              <span class="dot"></span> PLANT-01 // DIAGNOSTICS
-              <span class="spacer">LIVE</span>
+        <div class="arch-card__body">
+          <div class="wire wire--top">
+            <div class="wf-nav"><span class="wf-dot brand"></span><span class="wf-dot"></span><span class="wf-dot act"></span><span class="wf-dot"></span><span class="wf-dot" style="margin-left:auto"></span></div>
+            <div class="wf-body">
+              <span class="wf-line w70"></span><span class="wf-line w90"></span>
+              <div class="wf-grid"><span class="wf-cell"></span><span class="wf-cell"></span><span class="wf-cell"></span></div>
             </div>
-            <div class="console__body">
-              <div class="console__scan"></div>
-              <div class="console__row"><span>CONTROLLER</span><span>S7-1517F-3 PN/DP</span></div>
-              <div class="console__row"><span>SCAN CYCLE</span><span>1.24 ms</span></div>
-              <div class="console__row"><span>PROFINET</span><span class="ok">● 64 / 64 ONLINE</span></div>
-              <div class="console__kpis">
-                <div class="kpi"><div class="v">99.9%</div><div class="k">Uptime</div></div>
-                <div class="kpi"><div class="v">87%</div><div class="k">OEE</div></div>
-                <div class="kpi"><div class="v">240</div><div class="k">Courses</div></div>
+          </div>
+          <ul>
+            <li><svg><use href="#i-check"/></svg>顶部水平导航 + 锚点，引导式<b style="font-weight:600">&nbsp;发现漏斗</b></li>
+            <li><svg><use href="#i-check"/></svg>长滚动落地页，分区叙事：路径 → 支柱 → 课程 → 反馈</li>
+            <li><svg><use href="#i-check"/></svg>移动端抽屉菜单，响应式栅格</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arch-card">
+        <div class="arch-card__hd">
+          <span class="ic"><svg><use href="#i-sidebar"/></svg></span>
+          <div><h4>管理后台 · 侧栏 App-Shell</h4><div class="sub">admin · 客户端视图切换</div></div>
+        </div>
+        <div class="arch-card__body">
+          <div class="wire wire--side">
+            <div class="wf-shell">
+              <div class="wf-side"><span class="wf-sideitem act"></span><span class="wf-sideitem"></span><span class="wf-sideitem"></span><span class="wf-sideitem"></span><span class="wf-sideitem"></span></div>
+              <div class="wf-main">
+                <div class="wf-kpis"><span class="wf-kpi"></span><span class="wf-kpi"></span><span class="wf-kpi"></span><span class="wf-kpi"></span></div>
+                <span class="wf-line w90"></span><span class="wf-line w50"></span>
               </div>
             </div>
           </div>
-        </div>
-        <div class="motif__body">
-          <h4><svg><use href="#i-drive"/></svg>工业诊断面板 Hero（招牌母题）</h4>
-          <p>PLANT-01 实时读数 + 移动扫描线，把首屏变成一块活的机器仪表盘——整站最具记忆度的瞬间。此处为站点原组件实时渲染。</p>
+          <ul>
+            <li><svg><use href="#i-check"/></svg>固定侧栏 + 顶栏，<b style="font-weight:600">&nbsp;视图切换</b>（data-view，不整页刷新）</li>
+            <li><svg><use href="#i-check"/></svg>总览 KPI/图表、课程 CRUD、学员/路径/资料/设置</li>
+            <li><svg><use href="#i-check"/></svg>课程改动持久化到 localStorage（si-admin-courses-v1）</li>
+          </ul>
         </div>
       </div>
+    </div>
+
+    <div class="shared-note reveal">
+      <span class="funnel-tag"><svg><use href="#i-layers"/></svg>共用一套设计令牌 · var(--primary) / --font-mono / .card / .btn / 明暗主题</span>
     </div>
   </div>
 </section>
 
-<!-- ===== 07 组件 ===== -->
-<section class="section">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">组件 / COMPONENTS</div>
-      <h2><span class="sect-num">07</span>&nbsp; 实时组件库</h2>
-      <p>以下全部用 styles.css 的真实类名实时渲染，与前台站点逐像素一致。</p>
-    </div>
-
-    <div class="gallery reveal" data-stagger>
-      <div class="gallery__cell">
-        <span class="lbl">按钮 / Buttons</span>
-        <div class="gallery__demo">
-          <a class="btn" href="#top">主操作<svg><use href="#i-arrow"/></svg></a>
-          <a class="btn btn--ghost" href="#top">次操作</a>
-        </div>
-      </div>
-
-      <div class="gallery__cell">
-        <span class="lbl">眉标 + 标签 / Kicker &amp; Chip</span>
-        <div class="gallery__demo" style="flex-direction:column;align-items:flex-start;gap:16px">
-          <div class="kicker">学习路径 / LEARNING PATHS</div>
-          <span class="chip"><b></b>TIA Portal V21</span>
-        </div>
-      </div>
-
-      <div class="gallery__cell">
-        <span class="lbl">数据指标 / Stat</span>
-        <div class="gallery__demo">
-          <div class="stat" style="padding:18px 22px;border-right:0">
-            <div class="stat__v">62,000<span class="sfx">+</span></div>
-            <div class="stat__l">累计学员</div>
-            <div class="stat__en">Learners</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gallery__cell" style="grid-column:span 1">
-        <span class="lbl">课程卡 / Course Card（代码 + 等级）</span>
-        <div class="gallery__demo" style="display:block">
-          <article class="card course" style="cursor:default">
-            <div class="course__meta">
-              <span class="code">TIA-201</span>
-              <span class="tag tag--lv lv-Beginner">入门</span>
-              <span class="tag">实操实验</span>
-            </div>
-            <h3>TIA 博途 SIMATIC 编程（一）</h3>
-            <p>S7-1500 工程组态核心入门：硬件组态、LAD/FBD 基础、变量与程序结构。</p>
-            <div class="course__foot">
-              <span class="hrs"><svg><use href="#i-clock"/></svg>40 学时</span>
-              <span class="link-arrow">查看 <svg><use href="#i-arrow"/></svg></span>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <div class="gallery__cell">
-        <span class="lbl">等级标签 / Level Tags</span>
-        <div class="gallery__demo">
-          <span class="tag tag--lv lv-Beginner">入门</span>
-          <span class="tag tag--lv lv-Intermediate">进阶</span>
-          <span class="tag tag--lv lv-Advanced">高级</span>
-        </div>
-      </div>
-
-      <div class="gallery__cell">
-        <span class="lbl">图标徽章 / Icon Box</span>
-        <div class="gallery__demo">
-          <div class="icon-box"><svg><use href="#i-chip"/></svg></div>
-          <div class="icon-box"><svg><use href="#i-drive"/></svg></div>
-          <div class="icon-box"><svg><use href="#i-network"/></svg></div>
-          <div class="icon-box"><svg><use href="#i-shield"/></svg></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 08 动效与无障碍 ===== -->
+<!-- ===== 06 为什么纯静态无构建 ===== -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">动效与无障碍 / MOTION &amp; A11Y</div>
-      <h2><span class="sect-num">08</span>&nbsp; 克制的动效，严肃的无障碍</h2>
-      <p>一套编排的错峰入场 + 少量微交互；尊重 prefers-reduced-motion。无障碍对标 WCAG 2.2 AA。</p>
+      <div class="kicker">纯静态 / NO BUILD</div>
+      <h2><span class="sect-num">06</span>&nbsp; 为什么是纯静态、无构建</h2>
+      <p>原生 HTML/CSS/JS，没有打包、没有编译。换来的是这几件实在的好处。</p>
     </div>
 
-    <div class="split">
-      <div class="panel reveal stack-16">
-        <div>
-          <div class="sub-head">编排式错峰入场 / Staggered Reveal</div>
-          <p class="caption">滚动进入视口时，子元素以 ~60ms 递增延迟依次浮现（IntersectionObserver 驱动）。</p>
-          <div class="stagger-demo"><i></i><i></i><i></i><i></i><i></i></div>
-        </div>
-        <div>
-          <div class="sub-head">微交互 / Micro-interactions</div>
-          <p class="caption">导航青色下划线扫出、卡片上浮、按钮位移——全部短促（150–300ms）、可预期、不喧宾夺主。</p>
-        </div>
-        <div>
-          <div class="sub-head">减弱动效 / Reduced Motion</div>
-          <p class="caption mono">@media (prefers-reduced-motion: reduce) → 动画时长归零、reveal 直接可见、扫描线静止。</p>
-        </div>
+    <div class="benefits reveal" data-stagger>
+      <div class="benefit">
+        <span class="ic"><svg><use href="#i-bolt"/></svg></span>
+        <h4>秒开</h4>
+        <p>仅两个 JS、一份 CSS，无运行时框架，首屏轻量、即点即开。</p>
       </div>
-
-      <div class="reveal">
-        <div class="a11y-grid">
-          <div class="a11y-card">
-            <div class="ic"><svg><use href="#i-eye"/></svg></div>
-            <h4>可见焦点环</h4>
-            <p>键盘焦点 2px 实色 --focus 环 + 偏移，绝不移除 outline。</p>
-            <span class="focus-demo">:focus-visible</span>
-          </div>
-          <div class="a11y-card">
-            <div class="ic"><svg><use href="#i-target"/></svg></div>
-            <h4>44px+ 触控目标</h4>
-            <p>按钮、切换键最小高度 ≥ 44–46px，满足触控可达性。</p>
-          </div>
-          <div class="a11y-card">
-            <div class="ic"><svg><use href="#i-code"/></svg></div>
-            <h4>语义化 HTML</h4>
-            <p>header / main / section / article / nav 结构，aria-label 完整。</p>
-          </div>
-          <div class="a11y-card">
-            <div class="ic"><svg><use href="#i-check"/></svg></div>
-            <h4>对比度纪律</h4>
-            <p>正文用 #006e93 / #14191d 而非 petrol #009999——后者对比不足，仅作字标与图形。</p>
-          </div>
-        </div>
+      <div class="benefit">
+        <span class="ic"><svg><use href="#i-route"/></svg></span>
+        <h4>可移植</h4>
+        <p>assets/ 全相对引用，可放任意子目录，不锁死域名。</p>
+      </div>
+      <div class="benefit">
+        <span class="ic"><svg><use href="#i-server"/></svg></span>
+        <h4>任意静态托管</h4>
+        <p>GitHub Pages / Gitee Pages / Netlify / 任意 CDN / 本地 file:// 都能跑。</p>
+      </div>
+      <div class="benefit">
+        <span class="ic"><svg><use href="#i-code"/></svg></span>
+        <h4>交付即拉即用</h4>
+        <p>零依赖、零编译，协作者拉下来直接 serve，可读、可改、可审计。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 09 技术 ===== -->
+<hr class="rule" />
+
+<!-- ============================================================ -->
+<!-- PART B — 学习者用户旅程 + 体验评估                              -->
+<!-- ============================================================ -->
+
+<!-- ===== 07 用户画像 ===== -->
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">技术 / TECH STACK</div>
-      <h2><span class="sect-num">09</span>&nbsp; 无构建 · 数据驱动 · 随处可部署</h2>
-      <p>纯静态 HTML/CSS/JS，无打包步骤；内容由 data.js 驱动；全相对路径，扔到任何静态主机即可上线。</p>
+      <div class="kicker">第二部分 · 体验 / PART B — EXPERIENCE</div>
+      <h2><span class="sect-num">07</span>&nbsp; 用户画像</h2>
+      <p>带着一个真实的人走一遍这个站，体验设计才不是空谈。</p>
     </div>
 
-    <div class="tech-grid reveal" data-stagger>
-      <div class="tech-chip">
-        <div class="ic"><svg><use href="#i-code"/></svg></div>
-        <div><h4>无构建静态站</h4><p>原生 HTML/CSS/JS，零依赖、零编译，可读可改可审计。</p></div>
-      </div>
-      <div class="tech-chip">
-        <div class="ic"><svg><use href="#i-server"/></svg></div>
-        <div><h4>数据驱动</h4><p>课程 / 路径 / 反馈集中在 window.SITE_DATA，页面按需渲染。</p></div>
-      </div>
-      <div class="tech-chip">
-        <div class="ic"><svg><use href="#i-route"/></svg></div>
-        <div><h4>相对路径</h4><p>assets/ 全相对引用，可放任意子目录，不锁死域名。</p></div>
-      </div>
-      <div class="tech-chip">
-        <div class="ic"><svg><use href="#i-bolt"/></svg></div>
-        <div><h4>快速加载</h4><p>仅两个 JS、一份 CSS、系统字体回退，首屏轻量。</p></div>
-      </div>
-    </div>
-
-    <div class="panel panel--tint reveal" style="margin-top:24px">
-      <div class="sub-head">可部署到 / Deploys anywhere</div>
-      <div class="deploy-row">
-        <span class="chip"><b></b>GitHub Pages</span>
-        <span class="chip"><b></b>Gitee Pages</span>
-        <span class="chip"><b></b>Netlify / Vercel</span>
-        <span class="chip"><b></b>任意静态主机 / CDN</span>
-        <span class="chip"><b></b>本地 file://</span>
+    <div class="persona reveal">
+      <div class="persona__av">李</div>
+      <div class="persona__body">
+        <div class="persona__tag">PERSONA · 学习者画像</div>
+        <div class="persona__name">李工<span>自动化工程师</span></div>
+        <div class="persona__meta">
+          <span class="ptag"><svg><use href="#i-target"/></svg>想系统掌握 TIA 博途 / S7-1500 编程</span>
+          <span class="ptag"><svg><use href="#i-chip"/></svg>车间一线 · 看得懂电气图</span>
+          <span class="ptag"><svg><use href="#i-clock"/></svg>用碎片时间学习</span>
+          <span class="ptag"><svg><use href="#i-mobile"/></svg>常在手机/平板上看</span>
+        </div>
+        <p class="persona__goal">目标很明确：<b>不要零散视频，要一条能从入门走到精通的路径</b>。车间光线常常很暗，需要护眼；时间被设备调试切得很碎，每次只能学一小段，所以"快速找到该学的那一门 + 学起来不分心"对他最重要。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== CTA back ===== -->
+<!-- ===== 08 旅程时间线 ===== -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">旅程时间线 / JOURNEY</div>
+      <h2><span class="sect-num">08</span>&nbsp; 李工的六步旅程</h2>
+      <p>每一步拆成三栏：<b>我做什么</b> · <b>页面给我什么</b> · <b>体验为什么好</b>。</p>
+    </div>
+
+    <div class="timeline reveal">
+      <!-- step 1 -->
+      <div class="tstep">
+        <div class="tstep__node"><svg><use href="#i-home"/></svg></div>
+        <div class="tstep__card">
+          <div class="tstep__hd"><h4>进入首页</h4><span class="tstep__page">index.html</span></div>
+          <div class="tstep__cols">
+            <div class="tcol tcol--do"><div class="tcol__k"><svg><use href="#i-hand"/></svg>我做什么</div><p>第一次打开站点，想先搞清"这到底是什么、靠不靠谱"。</p></div>
+            <div class="tcol tcol--give"><div class="tcol__k"><svg><use href="#i-gift"/></svg>页面给我什么</div><p>英雄区一句话定位 + 实时<b>工业控制台</b>面板（PLANT-01 读数），下方 6 条学习路径卡。</p></div>
+            <div class="tcol tcol--why"><div class="tcol__k"><svg><use href="#i-spark"/></svg>为什么好</div><p>3 秒看懂"这是西门子工业培训"，控制台传达专业可信，路径让我立刻对号入座。</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- step 2 -->
+      <div class="tstep">
+        <div class="tstep__node"><svg><use href="#i-compass"/></svg></div>
+        <div class="tstep__card">
+          <div class="tstep__hd"><h4>选一条路径</h4><span class="tstep__page">→ catalog.html?track=</span></div>
+          <div class="tstep__cols">
+            <div class="tcol tcol--do"><div class="tcol__k"><svg><use href="#i-hand"/></svg>我做什么</div><p>点「SIMATIC S7 与 TIA 博途」这条路径上的"查看课程"。</p></div>
+            <div class="tcol tcol--give"><div class="tcol__k"><svg><use href="#i-gift"/></svg>页面给我什么</div><p>自动跳到课程目录，并已用 <code>?track=</code> 把路径筛选器预选到这条路径。</p></div>
+            <div class="tcol tcol--why"><div class="tcol__k"><svg><use href="#i-spark"/></svg>为什么好</div><p>意图被一路带过去，落地即是相关结果，不用自己重新翻找。</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- step 3 -->
+      <div class="tstep">
+        <div class="tstep__node"><svg><use href="#i-filter"/></svg></div>
+        <div class="tstep__card">
+          <div class="tstep__hd"><h4>找到那门课</h4><span class="tstep__page">catalog.html</span></div>
+          <div class="tstep__cols">
+            <div class="tcol tcol--do"><div class="tcol__k"><svg><use href="#i-hand"/></svg>我做什么</div><p>在路径内再按等级筛"入门"，或直接搜课程名/编号。</p></div>
+            <div class="tcol tcol--give"><div class="tcol__k"><svg><use href="#i-gift"/></svg>页面给我什么</div><p>路径×等级×搜索三重过滤 + 实时计数；课程卡上编号/等级/学时/形式一目了然。</p></div>
+            <div class="tcol tcol--why"><div class="tcol__k"><svg><use href="#i-spark"/></svg>为什么好</div><p>卡片信息密度刚好，几下就锁定 <code>TIA-201</code>，决策成本很低。</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- step 4 -->
+      <div class="tstep">
+        <div class="tstep__node"><svg><use href="#i-play"/></svg></div>
+        <div class="tstep__card">
+          <div class="tstep__hd"><h4>开始学习</h4><span class="tstep__page">→ course.html?id=TIA-201</span></div>
+          <div class="tstep__cols">
+            <div class="tcol tcol--do"><div class="tcol__k"><svg><use href="#i-hand"/></svg>我做什么</div><p>点开课程卡，进入学习页正式上课。</p></div>
+            <div class="tcol tcol--give"><div class="tcol__k"><svg><use href="#i-gift"/></svg>页面给我什么</div><p>视频播放器 + 章节目录 + 「你将学到」+ 讲师卡 + 侧栏报名/进度，一屏聚齐。</p></div>
+            <div class="tcol tcol--why"><div class="tcol__k"><svg><use href="#i-spark"/></svg>为什么好</div><p>所有学习要素聚拢在一处，视线不用到处跳，沉浸、不分心。</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- step 5 -->
+      <div class="tstep">
+        <div class="tstep__node"><svg><use href="#i-route"/></svg></div>
+        <div class="tstep__card">
+          <div class="tstep__hd"><h4>持续推进</h4><span class="tstep__page">course.html</span></div>
+          <div class="tstep__cols">
+            <div class="tcol tcol--do"><div class="tcol__k"><svg><use href="#i-hand"/></svg>我做什么</div><p>点不同章节、看自己学到哪、想着学完接哪门。</p></div>
+            <div class="tcol tcol--give"><div class="tcol__k"><svg><use href="#i-gift"/></svg>页面给我什么</div><p>点章节即联动播放器标题/进度；进度条可视；侧栏推荐<b>同路径下一门课</b>。</p></div>
+            <div class="tcol tcol--why"><div class="tcol__k"><svg><use href="#i-spark"/></svg>为什么好</div><p>有掌控感与即时反馈，学完一门顺势接下一门，路径不断档。</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- step 6 -->
+      <div class="tstep">
+        <div class="tstep__node"><svg><use href="#i-moon"/></svg></div>
+        <div class="tstep__card">
+          <div class="tstep__hd"><h4>适配场景</h4><span class="tstep__page">全站 · si-theme</span></div>
+          <div class="tstep__cols">
+            <div class="tcol tcol--do"><div class="tcol__k"><svg><use href="#i-hand"/></svg>我做什么</div><p>车间灯光暗，想护眼；换到平板/手机接着看。</p></div>
+            <div class="tcol tcol--give"><div class="tcol__k"><svg><use href="#i-gift"/></svg>页面给我什么</div><p>右上角一键切「暗色驾驶舱」主题，偏好存进 <code>si-theme</code> 全站通用；响应式照常。</p></div>
+            <div class="tcol tcol--why"><div class="tcol__k"><svg><use href="#i-spark"/></svg>为什么好</div><p>暗光护眼、跨设备一致、刷新不丢设置，碎片时间也能舒服地学。</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 09 体验评分卡 ===== -->
 <section class="section">
   <div class="wrap">
-    <div class="cta-band reveal">
+    <div class="section-head reveal">
+      <div class="kicker">体验评估 / SCORECARD</div>
+      <h2><span class="sect-num">09</span>&nbsp; 我的体验有多好</h2>
+      <p>每一项都对应站点里<b>真实落地的功能</b>，给一句话理由。分数为演示自评，非外部测评。</p>
+    </div>
+
+    <div style="margin-bottom:18px" class="reveal">
+      <span class="score-note"><svg><use href="#i-shield"/></svg>演示自评 · SELF-ASSESSMENT · 非用户研究数据</span>
+    </div>
+
+    <div class="scorecard reveal" data-stagger>
+      <div class="srow">
+        <div class="srow__label"><span class="ic"><svg><use href="#i-bolt"/></svg></span><div><div class="t">加载速度</div><div class="why">纯静态、仅两 JS 一 CSS，无运行时框架</div></div></div>
+        <div class="sbar"><span class="sbar__fill" data-score="96"></span></div>
+        <div class="srow__num">96<small>/100</small></div>
+      </div>
+      <div class="srow">
+        <div class="srow__label"><span class="ic"><svg><use href="#i-filter"/></svg></span><div><div class="t">找课效率</div><div class="why">?track= 预筛 + 等级筛选 + 名称/编号搜索 + 实时计数</div></div></div>
+        <div class="sbar"><span class="sbar__fill" data-score="92"></span></div>
+        <div class="srow__num">92<small>/100</small></div>
+      </div>
+      <div class="srow">
+        <div class="srow__label"><span class="ic"><svg><use href="#i-play"/></svg></span><div><div class="t">学习沉浸</div><div class="why">查看页聚合播放器/章节/目标/讲师/进度，点章节联动</div></div></div>
+        <div class="sbar"><span class="sbar__fill" data-score="90"></span></div>
+        <div class="srow__num">90<small>/100</small></div>
+      </div>
+      <div class="srow">
+        <div class="srow__label"><span class="ic"><svg><use href="#i-mobile"/></svg></span><div><div class="t">移动端</div><div class="why">响应式栅格 + 抽屉导航，断点逐级降列</div></div></div>
+        <div class="sbar"><span class="sbar__fill" data-score="88"></span></div>
+        <div class="srow__num">88<small>/100</small></div>
+      </div>
+      <div class="srow">
+        <div class="srow__label"><span class="ic"><svg><use href="#i-shield"/></svg></span><div><div class="t">品牌可信</div><div class="why">Siemens iX 视觉一致：石油青 + 工业母题 + 等宽数据</div></div></div>
+        <div class="sbar"><span class="sbar__fill" data-score="94"></span></div>
+        <div class="srow__num">94<small>/100</small></div>
+      </div>
+      <div class="srow">
+        <div class="srow__label"><span class="ic"><svg><use href="#i-eye"/></svg></span><div><div class="t">无障碍</div><div class="why">语义化结构 + 可见焦点环 + prefers-reduced-motion</div></div></div>
+        <div class="sbar"><span class="sbar__fill" data-score="85"></span></div>
+        <div class="srow__num">85<small>/100</small></div>
+      </div>
+      <div class="score-overall">
+        <span class="big" id="scoreAvg">—</span>
+        <div><div class="lbl">综合体验 / OVERALL</div></div>
+        <p class="desc">六项加权平均，覆盖速度、检索、沉浸、移动端、品牌与无障碍——演示自评，仅供交付沟通参考。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 一句话总结 ===== -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="verdict reveal">
       <div class="grid-bg"></div>
-      <div class="cta-band__in">
-        <h2>看完设计说明，回到真实站点体验</h2>
-        <div style="display:flex;gap:14px;flex-wrap:wrap">
-          <a class="btn" href="index.html">返回前台首页<svg><use href="#i-arrow"/></svg></a>
-          <a class="btn btn--ghost" style="color:#fff;border-color:rgba(255,255,255,.5)" href="catalog.html">浏览课程目录</a>
+      <div class="verdict__in">
+        <div class="kicker" style="justify-content:center;margin-bottom:18px">一句话总结 / VERDICT</div>
+        <p class="verdict__q">从<span class="em">发现</span>到<span class="em">学习</span>，意图一路被带着走——<br>找得快、学得专注、暗光护眼，<br>一眼就是<span class="em">西门子</span>。</p>
+        <div class="verdict__sub">单一数据源 · 组件复用 · 无后端轻量路由 · 纯静态秒开</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:26px">
+          <a class="btn" href="index.html">回到首页体验<svg><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="catalog.html">浏览课程目录</a>
         </div>
       </div>
     </div>
@@ -810,7 +820,7 @@
 <footer class="footer">
   <div class="wrap">
     <div class="footer__bottom" style="margin-top:0;border-top:0;padding-top:0">
-      <span>© 2026 SITRAIN Hub — 设计说明 / DESIGN RATIONALE. 演示用途，非西门子官方资料。</span>
+      <span>© 2026 SITRAIN Hub — 设计思路 / DESIGN THINKING. 演示用途，非西门子官方资料。</span>
       <span>BUILT WITH · ENGINEERED EDITORIAL</span>
     </div>
   </div>
@@ -818,5 +828,36 @@
 
 <script src="assets/data.js"></script>
 <script src="assets/app.js"></script>
+<script>
+/* page script — animate scorecard bars + compute overall (after app.js wires theme) */
+(function () {
+  "use strict";
+  var fills = Array.prototype.slice.call(document.querySelectorAll(".sbar__fill"));
+  var scores = fills.map(function (f) { return parseInt(f.getAttribute("data-score"), 10) || 0; });
+
+  function paint() {
+    fills.forEach(function (f) { f.style.width = (f.getAttribute("data-score") || 0) + "%"; });
+  }
+  // overall = simple average, rounded
+  var avgEl = document.getElementById("scoreAvg");
+  if (avgEl && scores.length) {
+    var avg = Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+    avgEl.textContent = avg;
+  }
+
+  // reveal-on-scroll for the bars; fall back to immediate
+  var card = document.querySelector(".scorecard");
+  if (card && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { paint(); io.disconnect(); }
+      });
+    }, { threshold: 0.25 });
+    io.observe(card);
+  } else {
+    paint();
+  }
+})();
+</script>
 </body>
 </html>
