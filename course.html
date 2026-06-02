@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>课程详情 · SITRAIN Hub</title>
+<meta name="description" content="SITRAIN Hub 课程学习页 —— 视频课程、章节目录、讲师信息与学习进度。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23009999'/%3E%3Ctext x='16' y='22' font-family='Archivo,sans-serif' font-size='18' font-weight='800' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
+<style>
+  .crumbs { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-weak); letter-spacing: .04em; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: clamp(20px,3vw,32px); }
+  .crumbs a { color: var(--text-soft); } .crumbs a:hover { color: var(--primary); }
+  .crumbs .sep { color: var(--line-strong); }
+
+  .course-hd { padding-block: 22px clamp(28px,4vw,40px); border-bottom: 1px solid var(--line); }
+  .course-hd__meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .course-hd h1 { font-size: clamp(26px,3.6vw,42px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; max-width: 22ch; }
+  .course-hd__en { font-family: var(--font-mono); font-size: 13px; color: var(--text-weak); letter-spacing: .04em; margin-top: 10px; text-transform: uppercase; }
+  .course-hd__by { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 18px; color: var(--text-soft); font-size: 14px; }
+  .course-hd__by .it { display: inline-flex; align-items: center; gap: 8px; }
+  .course-hd__by .it svg { width: 16px; height: 16px; color: var(--primary); }
+  .mini-av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: 12px; color: var(--on-primary); background: linear-gradient(135deg, var(--petrol), var(--primary)); }
+
+  .layout { display: grid; grid-template-columns: 1fr 348px; gap: clamp(28px,4vw,52px); align-items: start; padding-block: clamp(32px,4vw,48px); }
+
+  /* player */
+  .player { position: relative; aspect-ratio: 16/9; background: #0a1418; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line-strong); box-shadow: var(--sh-2); }
+  .player::after { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(0,234,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,234,255,.05) 1px, transparent 1px); background-size: 40px 40px; }
+  .player__badge { position: absolute; top: 16px; left: 16px; z-index: 3; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #cfe9f0; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.18); padding: 6px 10px; border-radius: var(--r); }
+  .player__play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; z-index: 3; background: rgba(0,194,214,.16); border: 1.5px solid var(--accent-bright); color: #eafdff; backdrop-filter: blur(4px); transition: transform .2s, background .2s; }
+  .player__play:hover { transform: scale(1.06); background: rgba(0,194,214,.3); }
+  .player__play svg { width: 38px; height: 38px; margin-left: 4px; }
+  .player__bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 14px 16px; background: linear-gradient(transparent, rgba(0,0,0,.65)); color: #dbeef4; }
+  .player__time { font-family: var(--font-mono); font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .player__now { color: #fff; font-weight: 500; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .player__track { height: 4px; background: rgba(255,255,255,.2); border-radius: 2px; overflow: hidden; }
+  .player__fill { height: 100%; width: 8%; background: var(--accent-bright); }
+
+  .block { padding-top: clamp(28px,3.5vw,40px); }
+  .block > h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .block > h2::before { content: ""; width: 4px; height: 18px; background: var(--accent-bright); border-radius: 2px; }
+  .block p.lead { color: var(--text-soft); font-size: 15.5px; line-height: 1.7; }
+
+  .learn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+  .learn li { display: flex; gap: 10px; align-items: flex-start; color: var(--text-soft); font-size: 14.5px; }
+  .learn li svg { width: 19px; height: 19px; color: var(--success); flex: none; margin-top: 1px; }
+
+  .teacher { display: flex; gap: 16px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 20px; }
+  .teacher .avatar { width: 52px; height: 52px; font-size: 18px; }
+  .teacher .nm { font-weight: 600; font-size: 16px; } .teacher .ti { color: var(--text-weak); font-size: 13px; font-family: var(--font-mono); margin-top: 3px; }
+
+  /* chapters */
+  .chapters { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
+  .lesson { display: flex; align-items: center; gap: 14px; padding: 15px 18px; border-bottom: 1px solid var(--line); cursor: pointer; transition: background .15s; }
+  .lesson:last-child { border-bottom: 0; }
+  .lesson:hover { background: var(--bg-alt); }
+  .lesson__n { font-family: var(--font-mono); font-size: 13px; color: var(--text-weak); width: 22px; flex: none; text-align: center; }
+  .lesson__ic { width: 34px; height: 34px; flex: none; border-radius: var(--r); display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); }
+  .lesson__ic svg { width: 17px; height: 17px; }
+  .lesson__main { flex: 1; min-width: 0; }
+  .lesson__t { font-size: 14.5px; font-weight: 500; }
+  .lesson__meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-weak); margin-top: 3px; letter-spacing: .03em; }
+  .lesson__dur { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-soft); flex: none; }
+  .lesson.is-current { background: color-mix(in srgb, var(--primary) 8%, transparent); }
+  .lesson.is-current .lesson__ic { background: var(--primary); color: var(--on-primary); }
+  .lesson.is-current .lesson__t { color: var(--primary); }
+  .lesson.is-done .lesson__ic { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
+
+  /* sidebar */
+  .side { position: sticky; top: calc(var(--header-h) + 20px); display: grid; gap: 22px; }
+  .side__card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; box-shadow: var(--sh-1); }
+  .side__price { font-family: var(--font-mono); font-size: 13px; color: var(--text-weak); text-transform: uppercase; letter-spacing: .1em; }
+  .side__spec { margin: 18px 0; display: grid; gap: 0; }
+  .side__spec div { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px dashed var(--line); font-size: 14px; color: var(--text-soft); }
+  .side__spec div:last-child { border-bottom: 0; }
+  .side__spec b { color: var(--text); font-weight: 600; font-family: var(--font-mono); }
+  .prog { margin-top: 6px; } .prog__l { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-weak); font-family: var(--font-mono); margin-bottom: 7px; }
+  .prog__track { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; } .prog__fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--petrol), var(--accent-bright)); }
+  .side__more h4 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-weak); margin-bottom: 12px; }
+  .more-item { display: block; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .more-item:last-child { border-bottom: 0; }
+  .more-item .c { font-family: var(--font-mono); font-size: 11px; color: var(--primary); letter-spacing: .05em; }
+  .more-item .t { font-size: 14px; font-weight: 500; margin-top: 4px; transition: color .15s; }
+  .more-item:hover .t { color: var(--primary); }
+
+  @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } .side { position: static; } }
+  @media (max-width: 600px) { .learn { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ===== SVG icon sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/></symbol>
+  <symbol id="i-drive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v4M12 11.2L6.2 17M12 11.2L17.8 17"/></symbol>
+  <symbol id="i-edge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.3A3.5 3.5 0 0117 18z"/><path d="M12 11v4M10 13h4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6z"/><path d="M9.2 12l2 2 3.6-4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-play-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 018 0v3"/></symbol>
+</svg>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="wrap header__inner">
+    <a class="brand" href="index.html#top" aria-label="SITRAIN Hub 首页">
+      <span class="brand__mark">SIEMENS</span>
+      <span class="brand__sub">SITRAIN Hub</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="主导航"></nav>
+    <div class="header__actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="切换深色/浅色主题">
+        <svg class="i-moon"><use href="#i-moon"/></svg>
+        <svg class="i-sun"><use href="#i-sun"/></svg>
+      </button>
+      <a class="btn btn--sm" href="catalog.html">课程目录<svg><use href="#i-arrow"/></svg></a>
+      <button class="menu-btn" id="menuBtn" aria-label="打开菜单"><svg style="width:22px;height:22px"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer__close" id="drawerClose" aria-label="关闭菜单"><svg style="width:26px;height:26px"><use href="#i-close"/></svg></button>
+  <nav id="navMobile" aria-label="移动导航"></nav>
+</div>
+
+<main>
+  <div class="wrap">
+    <nav class="crumbs" id="crumbs" aria-label="面包屑"></nav>
+
+    <div class="course-hd">
+      <div class="course-hd__meta" id="hdMeta"></div>
+      <h1 id="hdTitle">加载中…</h1>
+      <div class="course-hd__en" id="hdEn"></div>
+      <div class="course-hd__by" id="hdBy"></div>
+    </div>
+
+    <div class="layout">
+      <!-- main column -->
+      <div>
+        <div class="player">
+          <span class="player__badge">演示预览 · DEMO PREVIEW</span>
+          <button class="player__play" id="playBtn" aria-label="播放"><svg><use href="#i-play-sm"/></svg></button>
+          <div class="player__bar">
+            <div class="player__time"><span class="player__now" id="playerNow">第 1 讲 · 课程导学</span><span id="playerTime">00:00 / 12:30</span></div>
+            <div class="player__track"><div class="player__fill"></div></div>
+          </div>
+        </div>
+
+        <section class="block">
+          <h2>课程简介</h2>
+          <p class="lead" id="descText"></p>
+        </section>
+
+        <section class="block">
+          <h2>你将学到</h2>
+          <ul class="learn" id="learnList"></ul>
+        </section>
+
+        <section class="block">
+          <h2>课程章节</h2>
+          <div class="chapters" id="chapters"></div>
+        </section>
+
+        <section class="block">
+          <h2>讲师</h2>
+          <div class="teacher">
+            <div class="avatar" id="tAvatar"></div>
+            <div><div class="nm" id="tName"></div><div class="ti" id="tTitle"></div></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- sidebar -->
+      <aside class="side">
+        <div class="side__card">
+          <div class="side__price">免费 · 企业席位可定制</div>
+          <div class="side__spec" id="sideSpec"></div>
+          <a class="btn btn--block" href="#" id="enrollBtn">立即学习<svg><use href="#i-arrow"/></svg></a>
+          <div style="height:10px"></div>
+          <button class="btn btn--ghost btn--block" id="favBtn">加入收藏</button>
+          <div class="prog">
+            <div class="prog__l"><span>学习进度</span><span id="progPct">0%</span></div>
+            <div class="prog__track"><div class="prog__fill" id="progFill"></div></div>
+          </div>
+        </div>
+        <div class="side__card side__more">
+          <h4>本路径其他课程</h4>
+          <div id="moreList"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html#top"><span class="brand__mark">SIEMENS</span><span class="brand__sub">SITRAIN Hub</span></a>
+        <p>西门子数字化工业培训学院（演示站）。从 PLC 到云端，系统化掌握工业自动化与数字化能力。</p>
+      </div>
+      <div><h4>学习路径</h4><ul id="foot-paths"></ul></div>
+      <div><h4>资源</h4><ul>
+        <li><a href="catalog.html">课程目录</a></li>
+        <li><a href="index.html#resources">虚拟实验室</a></li>
+        <li><a href="index.html#resources">数据手册库</a></li>
+        <li><a href="index.html#resources">认证备考</a></li>
+      </ul></div>
+      <div><h4>关于</h4><ul>
+        <li><a href="index.html#voices">学员反馈</a></li>
+        <li><a href="index.html#paths">企业内训</a></li>
+        <li><a href="index.html#top">联系我们</a></li>
+      </ul></div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 SITRAIN Hub — 演示用途 / DEMO. 课程数据为示例，非西门子官方数据。</span>
+      <span>BUILT WITH · ENGINEERED EDITORIAL</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var D = window.SITE_DATA || {};
+  var S = window.SITRAIN || {};
+  var $ = function (s) { return document.querySelector(s); };
+  var icon = S.icon || function (k) { return '<svg><use href="#i-' + k + '"></use></svg>'; };
+  var LV = S.LV_ZH || { Beginner: "入门", Intermediate: "进阶", Advanced: "高级" };
+
+  function param(k) { return new URLSearchParams(location.search).get(k); }
+  var courses = D.courses || [];
+  var id = param("id");
+  var c = courses.filter(function (x) { return x.id === id; })[0] || courses[0];
+  if (!c) return;
+  var track = (D.tracks || []).filter(function (t) { return t.id === c.track; })[0] || {};
+
+  document.title = c.title_zh + " · SITRAIN Hub";
+
+  // breadcrumb
+  $("#crumbs").innerHTML =
+    '<a href="index.html">首页</a><span class="sep">/</span>' +
+    '<a href="catalog.html?track=' + c.track + '">' + (track.name_zh || "课程") + '</a>' +
+    '<span class="sep">/</span><span>' + c.id + '</span>';
+
+  // header meta + title
+  $("#hdMeta").innerHTML =
+    '<span class="code">' + c.id + '</span>' +
+    '<span class="tag tag--lv lv-' + c.level + '">' + (LV[c.level] || c.level) + '</span>' +
+    '<span class="tag">' + c.format + '</span>';
+  $("#hdTitle").textContent = c.title_zh;
+  $("#hdEn").textContent = c.title_en || "";
+
+  function initials(name) { var p = (name || "").trim().split(/\s+/); return ((p[0] || "")[0] || "") + ((p[1] || "")[0] || (p[0] || "")[1] || ""); }
+  var inits = initials(c.instructor).toUpperCase();
+
+  $("#hdBy").innerHTML =
+    '<span class="it"><span class="mini-av">' + inits + '</span>' + c.instructor + ' · ' + (c.instructor_title || "") + '</span>' +
+    '<span class="it">' + icon("clock") + c.hours + ' 学时</span>' +
+    '<span class="it">' + icon("badge") + ' 含结业认证</span>';
+
+  // description + learn
+  $("#descText").textContent = c.desc_zh || "";
+  $("#learnList").innerHTML = (c.learn || []).map(function (x) {
+    return '<li>' + icon("check") + '<span>' + x + '</span></li>';
+  }).join("");
+
+  // teacher
+  $("#tAvatar").textContent = inits;
+  $("#tName").textContent = c.instructor;
+  $("#tTitle").textContent = c.instructor_title || "SITRAIN 认证讲师";
+
+  // chapters synthesized from course data
+  function fmt(m) { var mm = Math.floor(m), ss = Math.round((m - mm) * 60); return (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss; }
+  var lessons = [];
+  lessons.push({ t: "课程导学与学习目标", type: "video", done: true });
+  (c.learn || []).forEach(function (l, i) { lessons.push({ t: l, type: i === 0 ? "video" : (i % 2 ? "doc" : "video"), done: false }); });
+  lessons.push({ t: "实操实验 · " + (track.name_zh || "动手练习"), type: "lab", done: false });
+  lessons.push({ t: "结业测验与认证", type: "quiz", done: false });
+
+  var per = (c.hours * 60) / lessons.length / 6; // compress into believable per-lesson minutes
+  var typeMeta = { video: { ic: "play-sm", lb: "视频" }, doc: { ic: "doc", lb: "文档" }, lab: { ic: "chip", lb: "实验" }, quiz: { ic: "badge", lb: "测验" } };
+  var curIndex = 1; // first non-intro lesson "current"
+  $("#chapters").innerHTML = lessons.map(function (ls, i) {
+    var tm = typeMeta[ls.type] || typeMeta.video;
+    var dur = fmt(8 + per + (i % 3) * 3.5);
+    var cls = ls.done ? "is-done" : (i === curIndex ? "is-current" : "");
+    var icn = ls.done ? icon("check") : (i === curIndex ? icon(tm.ic) : (i > curIndex && ls.type !== "video" ? icon("lock") : icon(tm.ic)));
+    return '<div class="lesson ' + cls + '" data-title="第 ' + (i + 1) + ' 讲 · ' + ls.t + '" data-dur="' + dur + '">' +
+      '<span class="lesson__n">' + (i + 1 < 10 ? "0" : "") + (i + 1) + '</span>' +
+      '<span class="lesson__ic">' + icn + '</span>' +
+      '<div class="lesson__main"><div class="lesson__t">' + ls.t + '</div>' +
+      '<div class="lesson__meta">' + tm.lb + (ls.done ? " · 已完成" : (i === curIndex ? " · 正在学习" : "")) + '</div></div>' +
+      '<span class="lesson__dur">' + dur + '</span></div>';
+  }).join("");
+
+  // lesson click -> update player label
+  $("#chapters").addEventListener("click", function (e) {
+    var row = e.target.closest(".lesson"); if (!row) return;
+    document.querySelectorAll(".lesson").forEach(function (n) { n.classList.remove("is-current"); });
+    if (!row.classList.contains("is-done")) row.classList.add("is-current");
+    $("#playerNow").textContent = row.getAttribute("data-title");
+    $("#playerTime").textContent = "00:00 / " + row.getAttribute("data-dur");
+  });
+
+  // sidebar spec
+  $("#sideSpec").innerHTML =
+    '<div><span>难度等级</span><b>' + (LV[c.level] || c.level) + '</b></div>' +
+    '<div><span>学习时长</span><b>' + c.hours + ' 学时</b></div>' +
+    '<div><span>课程形式</span><b>' + c.format + '</b></div>' +
+    '<div><span>章节数</span><b>' + lessons.length + ' 讲</b></div>' +
+    '<div><span>课程编号</span><b>' + c.id + '</b></div>';
+
+  // favorite toggle (demo)
+  var fav = false;
+  $("#favBtn").addEventListener("click", function () {
+    fav = !fav; this.textContent = fav ? "已收藏 ✓" : "加入收藏";
+  });
+  // enroll -> bump progress (demo feedback)
+  $("#enrollBtn").addEventListener("click", function (e) {
+    e.preventDefault(); $("#progFill").style.width = "12%"; $("#progPct").textContent = "12%";
+    $("#playerNow").textContent = document.querySelector(".lesson.is-current .lesson__t") ? ("第 2 讲 · " + document.querySelector(".lesson.is-current .lesson__t").textContent) : "开始学习";
+  });
+
+  // more courses in same track
+  var more = courses.filter(function (x) { return x.track === c.track && x.id !== c.id; });
+  if (more.length < 3) { more = more.concat(courses.filter(function (x) { return x.track !== c.track && x.id !== c.id; })); }
+  $("#moreList").innerHTML = more.slice(0, 4).map(function (m) {
+    return '<a class="more-item" href="course.html?id=' + m.id + '"><span class="c">' + m.id + '</span><div class="t">' + m.title_zh + '</div></a>';
+  }).join("");
+})();
+</script>
+</body>
+</html>

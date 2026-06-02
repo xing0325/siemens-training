@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>课程目录 · SITRAIN Hub</title>
+<meta name="description" content="SITRAIN Hub 课程目录 —— 按学习路径、难度等级筛选并搜索西门子工业培训课程，从 SIMATIC、SINAMICS 到 PROFINET 与工业边缘全栈课程。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23009999'/%3E%3Ctext x='16' y='22' font-family='Archivo,sans-serif' font-size='18' font-weight='800' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
+
+<!-- ===== Page-specific CSS (catalog only) ===== -->
+<style>
+  /* page header band — tighten the section since the filter bar follows */
+  .catalog-head { padding-block: clamp(40px, 6vw, 72px) clamp(24px, 3vw, 36px); }
+  .catalog-head .kicker { margin-bottom: 18px; }
+  .catalog-head h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800; line-height: 1.02; letter-spacing: -0.02em;
+  }
+  .result-count {
+    margin-top: 16px; font-family: var(--font-mono); font-size: 13.5px;
+    letter-spacing: .04em; color: var(--text-soft);
+  }
+  .result-count b { color: var(--primary); font-weight: 600; }
+
+  /* ---- sticky filter bar ---- */
+  .filterbar {
+    position: sticky; top: var(--header-h); z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-strong);
+    transition: background .4s, border-color .4s;
+  }
+  .filterbar__inner { padding-block: 16px; display: grid; gap: 14px; }
+  .filter-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .filter-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--text-weak);
+    flex: none; min-width: 52px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* filter chip — engineered, sharp 4px radius, clear active state */
+  .fchip {
+    font-family: var(--font-mono); font-size: 12.5px; font-weight: 500;
+    letter-spacing: .02em; line-height: 1;
+    padding: 9px 14px; border-radius: var(--r);
+    border: 1px solid var(--line-strong); background: var(--surface);
+    color: var(--text-soft);
+    transition: color .18s, border-color .18s, background .18s, box-shadow .18s;
+  }
+  .fchip:hover { color: var(--primary); border-color: var(--primary); }
+  .fchip[aria-pressed="true"] {
+    background: var(--primary); border-color: var(--primary);
+    color: var(--on-primary); box-shadow: var(--sh-1);
+  }
+  .fchip[aria-pressed="true"]:hover { color: var(--on-primary); }
+
+  /* search field — mono, matches the engineered look */
+  .search {
+    position: relative; flex: 1; min-width: 220px; max-width: 420px; margin-left: auto;
+  }
+  .search svg {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    width: 17px; height: 17px; color: var(--text-weak); pointer-events: none;
+  }
+  .search input {
+    width: 100%; font-family: var(--font-mono); font-size: 13px; letter-spacing: .01em;
+    color: var(--text); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: var(--r);
+    padding: 10px 14px 10px 38px; min-height: 40px;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .search input::placeholder { color: var(--text-weak); }
+  .search input:focus-visible {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
+  }
+
+  /* results section */
+  .results { padding-block: clamp(32px, 5vw, 56px); }
+
+  /* empty state */
+  .empty {
+    grid-column: 1 / -1; text-align: center; padding: clamp(48px, 8vw, 88px) 24px;
+    border: 1px dashed var(--line-strong); border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+  .empty .icon-box { margin: 0 auto 18px; }
+  .empty h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .empty p { color: var(--text-soft); font-size: 14.5px; margin-top: 8px; }
+  .empty .link-arrow { margin-top: 18px; cursor: pointer; }
+
+  @media (max-width: 860px) {
+    .search { margin-left: 0; max-width: none; }
+    .filter-row { gap: 10px; }
+  }
+  @media (max-width: 600px) {
+    .filter-label { width: 100%; min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SVG icon sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/></symbol>
+  <symbol id="i-drive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v4M12 11.2L6.2 17M12 11.2L17.8 17"/></symbol>
+  <symbol id="i-edge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.3A3.5 3.5 0 0117 18z"/><path d="M12 11v4M10 13h4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6z"/><path d="M9.2 12l2 2 3.6-4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+</svg>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="wrap header__inner">
+    <a class="brand" href="index.html#top" aria-label="SITRAIN Hub 首页">
+      <span class="brand__mark">SIEMENS</span>
+      <span class="brand__sub">SITRAIN Hub</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="主导航"></nav>
+    <div class="header__actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="切换深色/浅色主题">
+        <svg class="i-moon"><use href="#i-moon"/></svg>
+        <svg class="i-sun"><use href="#i-sun"/></svg>
+      </button>
+      <a class="btn btn--sm" href="catalog.html">进入培训中心<svg><use href="#i-arrow"/></svg></a>
+      <button class="menu-btn" id="menuBtn" aria-label="打开菜单"><svg style="width:22px;height:22px"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer__close" id="drawerClose" aria-label="关闭菜单"><svg style="width:26px;height:26px"><use href="#i-close"/></svg></button>
+  <nav id="navMobile" aria-label="移动导航"></nav>
+</div>
+
+<main id="top">
+
+<!-- ===== Page header band ===== -->
+<section class="section catalog-head">
+  <div class="wrap">
+    <div class="kicker">课程目录 / COURSE CATALOG</div>
+    <h1>全部课程</h1>
+    <p class="result-count" id="resultCount" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- ===== Sticky filter bar ===== -->
+<div class="filterbar">
+  <div class="wrap filterbar__inner">
+    <div class="filter-row">
+      <span class="filter-label">路径</span>
+      <div class="chips" id="trackChips" role="group" aria-label="按学习路径筛选"></div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">等级</span>
+      <div class="chips" id="levelChips" role="group" aria-label="按难度等级筛选"></div>
+      <div class="search">
+        <svg aria-hidden="true"><use href="#i-search"/></svg>
+        <input id="searchInput" type="search" autocomplete="off"
+               placeholder="搜索课程名 / 课程编号…" aria-label="搜索课程名或课程编号" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Results ===== -->
+<section class="results">
+  <div class="wrap">
+    <div class="grid cols-3" id="resultsGrid"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html#top"><span class="brand__mark">SIEMENS</span><span class="brand__sub">SITRAIN Hub</span></a>
+        <p>西门子数字化工业培训学院（演示站）。从 PLC 到云端，系统化掌握工业自动化与数字化能力。</p>
+      </div>
+      <div><h4>学习路径</h4><ul id="foot-paths"></ul></div>
+      <div><h4>资源</h4><ul>
+        <li><a href="catalog.html">课程目录</a></li>
+        <li><a href="index.html#resources">虚拟实验室</a></li>
+        <li><a href="index.html#resources">数据手册库</a></li>
+        <li><a href="index.html#resources">认证备考</a></li>
+      </ul></div>
+      <div><h4>关于</h4><ul>
+        <li><a href="index.html#voices">学员反馈</a></li>
+        <li><a href="index.html#paths">企业内训</a></li>
+        <li><a href="index.html#top">联系我们</a></li>
+      </ul></div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 SITRAIN Hub — 演示用途 / DEMO. 课程数据为示例，非西门子官方数据。</span>
+      <span>BUILT WITH · ENGINEERED EDITORIAL</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  "use strict";
+  var D = window.SITE_DATA || {};
+  var S = window.SITRAIN || {};
+  var courses = D.courses || [];
+  var tracks = D.tracks || [];
+  var LV_ZH = S.LV_ZH || { Beginner: "入门", Intermediate: "进阶", Advanced: "高级" };
+  var $ = function (s) { return document.querySelector(s); };
+
+  var trackChips = $("#trackChips");
+  var levelChips = $("#levelChips");
+  var searchInput = $("#searchInput");
+  var grid = $("#resultsGrid");
+  var countEl = $("#resultCount");
+
+  // ---- filter state ----
+  var state = { track: "all", level: "all", q: "" };
+
+  // pre-select track from ?track=<trackId>
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var qt = params.get("track");
+    if (qt && tracks.some(function (t) { return t.id === qt; })) state.track = qt;
+  } catch (e) {}
+
+  // ---- build chips ----
+  function chipHTML(value, label, active) {
+    return '<button type="button" class="fchip" data-value="' + value +
+      '" aria-pressed="' + (active ? "true" : "false") + '">' + label + "</button>";
+  }
+
+  // track chips: 全部 + each track (name_zh)
+  trackChips.innerHTML = chipHTML("all", "全部", state.track === "all") +
+    tracks.map(function (t) {
+      return chipHTML(t.id, t.name_zh, state.track === t.id);
+    }).join("");
+
+  // level chips: 全部 / 入门 / 进阶 / 高级
+  var LEVELS = ["all", "Beginner", "Intermediate", "Advanced"];
+  levelChips.innerHTML = LEVELS.map(function (lv) {
+    return chipHTML(lv, lv === "all" ? "全部" : (LV_ZH[lv] || lv), state.level === lv);
+  }).join("");
+
+  // ---- chip group selection (single-select) ----
+  function wireGroup(container, key) {
+    container.addEventListener("click", function (e) {
+      var btn = e.target.closest(".fchip");
+      if (!btn || !container.contains(btn)) return;
+      state[key] = btn.getAttribute("data-value");
+      Array.prototype.forEach.call(container.querySelectorAll(".fchip"), function (c) {
+        c.setAttribute("aria-pressed", c === btn ? "true" : "false");
+      });
+      render();
+    });
+  }
+  wireGroup(trackChips, "track");
+  wireGroup(levelChips, "level");
+
+  searchInput.addEventListener("input", function () {
+    state.q = searchInput.value.trim().toLowerCase();
+    render();
+  });
+
+  // ---- filtering: track AND level AND search ----
+  function matches(c) {
+    if (state.track !== "all" && c.track !== state.track) return false;
+    if (state.level !== "all" && c.level !== state.level) return false;
+    if (state.q) {
+      var hay = (
+        (c.title_zh || "") + " " +
+        (c.title_en || "") + " " +
+        (c.id || "")
+      ).toLowerCase();
+      if (hay.indexOf(state.q) === -1) return false;
+    }
+    return true;
+  }
+
+  // ---- render results + count (cards rendered plain, always visible) ----
+  function render() {
+    var list = courses.filter(matches);
+    var total = courses.length;
+
+    countEl.innerHTML = "共 " + total + " 门课程 · <b>" + list.length + "</b> 门匹配";
+
+    if (!list.length) {
+      grid.innerHTML =
+        '<div class="empty">' +
+          '<div class="icon-box"><svg><use href="#i-search"/></svg></div>' +
+          '<h3>没有匹配的课程</h3>' +
+          '<p>没有匹配的课程，试试调整筛选条件。</p>' +
+          '<button type="button" class="link-arrow" id="clearFilters">重置筛选 <svg><use href="#i-arrow"/></svg></button>' +
+        '</div>';
+      var clr = $("#clearFilters");
+      if (clr) clr.addEventListener("click", resetAll);
+      return;
+    }
+
+    grid.innerHTML = list.map(function (c) {
+      return S.courseCard ? S.courseCard(c) : "";
+    }).join("");
+  }
+
+  function resetAll() {
+    state.track = "all"; state.level = "all"; state.q = "";
+    searchInput.value = "";
+    Array.prototype.forEach.call(document.querySelectorAll(".fchip"), function (c) {
+      c.setAttribute("aria-pressed", c.getAttribute("data-value") === "all" ? "true" : "false");
+    });
+    render();
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

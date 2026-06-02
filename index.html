@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SITRAIN Hub · 西门子工业培训学院 | 从 PLC 到云端</title>
+<meta name="description" content="对标西门子 SITRAIN 官方培训体系的工业培训学习平台 demo —— SIMATIC、SINAMICS、PROFINET、工业边缘与 Insights Hub 全栈课程，边学边练边认证。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23009999'/%3E%3Ctext x='16' y='22' font-family='Archivo,sans-serif' font-size='18' font-weight='800' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- ===== SVG icon sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/></symbol>
+  <symbol id="i-drive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+  <symbol id="i-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v4M12 11.2L6.2 17M12 11.2L17.8 17"/></symbol>
+  <symbol id="i-edge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.3A3.5 3.5 0 0117 18z"/><path d="M12 11v4M10 13h4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6z"/><path d="M9.2 12l2 2 3.6-4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="wrap header__inner">
+    <a class="brand" href="index.html#top" aria-label="SITRAIN Hub 首页">
+      <span class="brand__mark">SIEMENS</span>
+      <span class="brand__sub">SITRAIN Hub</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="主导航"></nav>
+    <div class="header__actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="切换深色/浅色主题">
+        <svg class="i-moon"><use href="#i-moon"/></svg>
+        <svg class="i-sun"><use href="#i-sun"/></svg>
+      </button>
+      <a class="btn btn--sm" href="#paths">进入培训中心<svg><use href="#i-arrow"/></svg></a>
+      <button class="menu-btn" id="menuBtn" aria-label="打开菜单"><svg style="width:22px;height:22px"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer__close" id="drawerClose" aria-label="关闭菜单"><svg style="width:26px;height:26px"><use href="#i-close"/></svg></button>
+  <nav id="navMobile" aria-label="移动导航"></nav>
+</div>
+
+<main id="top">
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="wrap hero__inner">
+    <div class="hero__copy">
+      <div class="kicker hero__kicker">SITRAIN · 西门子数字化工业学院</div>
+      <h1>从 <span class="em">PLC</span> 到云端<br>系统精通<span class="em">数字化工业</span></h1>
+      <p class="hero__lead">对标西门子 SITRAIN 官方培训体系，覆盖 SIMATIC、SINAMICS、PROFINET 到工业边缘与 Insights Hub 的完整学习路径——边学、边练、边认证，让一线团队技能标准化、可量化。</p>
+      <div class="hero__badges">
+        <span class="chip"><b></b>TIA Portal V21</span>
+        <span class="chip"><b></b>SIMATIC S7-1500</span>
+        <span class="chip"><b></b>SINAMICS 驱动</span>
+        <span class="chip"><b></b>Industrial Edge</span>
+      </div>
+      <div class="hero__cta">
+        <a class="btn" href="catalog.html">开始学习<svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="#paths">浏览 6 条学习路径</a>
+      </div>
+    </div>
+
+    <!-- industrial console panel -->
+    <div class="console reveal">
+      <div class="console__bar">
+        <span class="dot"></span> PLANT-01 // DIAGNOSTICS
+        <span class="spacer">LIVE</span>
+      </div>
+      <div class="console__body">
+        <div class="console__scan"></div>
+        <div class="console__row"><span>CONTROLLER</span><span>S7-1517F-3 PN/DP</span></div>
+        <div class="console__row"><span>SCAN CYCLE</span><span>1.24 ms</span></div>
+        <div class="console__row"><span>PROFINET</span><span class="ok">● 64 / 64 ONLINE</span></div>
+        <div class="console__row"><span>SAFETY</span><span class="ok">● F-PROG OK</span></div>
+        <div class="console__row"><span>EDGE LINK</span><span class="ok">● INSIGHTS HUB</span></div>
+        <div class="console__kpis">
+          <div class="kpi"><div class="v">99.9%</div><div class="k">Uptime</div></div>
+          <div class="kpi"><div class="v">87%</div><div class="k">OEE</div></div>
+          <div class="kpi"><div class="v">240</div><div class="k">Courses</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Stats ===== -->
+<section class="wrap" style="padding-bottom: clamp(40px,6vw,72px)">
+  <div class="stats reveal" id="stats" data-stagger></div>
+</section>
+
+<!-- ===== Learning paths ===== -->
+<section class="section section--alt" id="paths">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">学习路径 / LEARNING PATHS</div>
+      <h2>按岗位与阶段，选你的进阶路线</h2>
+      <p>6 条结构化学习路径，从自动化基础到功能安全，每一条都对应真实的西门子数字化工业产品线与岗位能力模型。</p>
+    </div>
+    <div class="grid cols-3" id="paths-grid" data-stagger></div>
+  </div>
+</section>
+
+<!-- ===== How it works (pillars) ===== -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">学 · 练 · 证 / HOW IT WORKS</div>
+      <h2>不止看视频，是一套可落地的能力闭环</h2>
+    </div>
+    <div class="grid cols-3" id="pillars" data-stagger></div>
+  </div>
+</section>
+
+<!-- ===== Featured courses ===== -->
+<section class="section section--alt" id="courses">
+  <div class="wrap">
+    <div class="section-head reveal" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none;gap:24px;flex-wrap:wrap">
+      <div style="max-width:680px">
+        <div class="kicker">精选课程 / FEATURED</div>
+        <h2>热门课程，立即开学</h2>
+      </div>
+      <a class="link-arrow" href="catalog.html">浏览全部课程目录 <svg><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="grid cols-3" id="courses-grid" data-stagger></div>
+  </div>
+</section>
+
+<!-- ===== Resources / tools ===== -->
+<section class="section" id="resources">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">资料与工具 / RESOURCES & TOOLS</div>
+      <h2>速查表、参数手册与虚拟实验室</h2>
+      <p>精选实战文档、参数清单与浏览器内的虚拟 PLC 仿真环境，免费随取，学完即用。</p>
+    </div>
+    <div class="grid cols-3" id="res-grid" data-stagger></div>
+  </div>
+</section>
+
+<!-- ===== Testimonials ===== -->
+<section class="section section--alt" id="voices">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">学员反馈 / VOICES</div>
+      <h2>已有 62,000+ 工程师在这里提升</h2>
+    </div>
+    <div class="voices" id="voices-grid" data-stagger></div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <div class="grid-bg"></div>
+      <div class="cta-band__in">
+        <h2>让你的团队，从这里开始数字化</h2>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a class="btn" href="catalog.html">浏览课程目录<svg><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" style="color:#fff;border-color:rgba(255,255,255,.5)" href="#paths">预约企业内训</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="#top"><span class="brand__mark">SIEMENS</span><span class="brand__sub">SITRAIN Hub</span></a>
+        <p>西门子数字化工业培训学院（演示站）。从 PLC 到云端，系统化掌握工业自动化与数字化能力。</p>
+      </div>
+      <div><h4>学习路径</h4><ul id="foot-paths"></ul></div>
+      <div><h4>资源</h4><ul>
+        <li><a href="catalog.html">课程目录</a></li>
+        <li><a href="#resources">虚拟实验室</a></li>
+        <li><a href="#resources">数据手册库</a></li>
+        <li><a href="#resources">认证备考</a></li>
+      </ul></div>
+      <div><h4>关于</h4><ul>
+        <li><a href="#voices">学员反馈</a></li>
+        <li><a href="#paths">企业内训</a></li>
+        <li><a href="#top">联系我们</a></li>
+      </ul></div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 SITRAIN Hub — 演示用途 / DEMO. 课程数据为示例，非西门子官方数据。</span>
+      <span>BUILT WITH · ENGINEERED EDITORIAL</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
